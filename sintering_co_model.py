@@ -64,14 +64,15 @@ def generate_synthetic_data(n=2442, seed=42):
     flue_tmp1 = 155 + 28 * np.sin(t / 320) + 4 * np.random.randn(n)
     flue_tmp2 = 148 + 28 * np.sin(t / 320 + 0.3) + 4 * np.random.randn(n)
 
-    # CO浓度（ppm）：与前几段负压有时滞相关
-    co = (2600
-          + 180 * np.sin(t / 550)
-          - 35 * np.roll(neg_pressures[:, 0], 25)
-          - 22 * np.roll(neg_pressures[:, 3], 18)
-          - 15 * np.roll(neg_pressures[:, 7], 12)
-          + 0.3 * speed * 100
-          + 55 * np.random.randn(n))
+    # CO浓度（ppm）：因果时滞（causal shift，非roll循环）
+    # 1#风箱(lag=25步), 4#风箱(lag=18步), 8#风箱(lag=12步) 对CO有滞后影响
+    co = 2600 + 180 * np.sin(t / 550) + 0.3 * speed * 100 + 55 * np.random.randn(n)
+    co[25:] -= 35 * neg_pressures[:-25, 0]   # 1#  lag 25
+    co[18:] -= 22 * neg_pressures[:-18, 3]   # 4#  lag 18
+    co[12:] -= 15 * neg_pressures[:-12, 7]   # 8#  lag 12
+    co[:25] -= 35 * neg_pressures[0, 0]      # 边界用首值填充
+    co[:18] -= 22 * neg_pressures[0, 3]
+    co[:12] -= 15 * neg_pressures[0, 7]
     co = np.clip(co, 600, 5500)
 
     # 组合列名
@@ -583,17 +584,43 @@ print(f"  PCA列在优化特征矩阵中的位置: {pca_opt_indices}")
 
 
 def neg_to_opt_feat_row(neg_values):
-    """将18个风箱负压映射到优化模型特征向量（无CO_lag特征）"""
+    """将18个风箱负压映射到优化模型特征向量（稳态：所有压力派生特征同步更新）"""
     row = feat_opt_mean_row.copy().values.astype(float)
-    neg_arr = np.array(neg_values, dtype=float).reshape(1, -1)
-    if neg_arr.shape[1] < len(neg_cols):
-        neg_arr = np.hstack([neg_arr, np.zeros((1, len(neg_cols) - neg_arr.shape[1]))])
-    elif neg_arr.shape[1] > len(neg_cols):
-        neg_arr = neg_arr[:, :len(neg_cols)]
-    pca_val = pca_model.transform(scaler_pca.transform(neg_arr))[0]
+    nv = np.array(neg_values, dtype=float)
+    if len(nv) < len(neg_cols):
+        nv = np.hstack([nv, np.zeros(len(neg_cols) - len(nv))])
+    elif len(nv) > len(neg_cols):
+        nv = nv[:len(neg_cols)]
+
+    # 1. PCA主成分
+    pca_val = pca_model.transform(scaler_pca.transform(nv.reshape(1, -1)))[0]
     for k, idx in enumerate(pca_opt_indices):
         if k < len(pca_val):
             row[idx] = pca_val[k]
+
+    # 2. 时滞对齐的负压列（稳态：lagged值 = 当前值）
+    for i, col in enumerate(neg_cols):
+        lag_col = f'{col}_lagged'
+        if lag_col in feature_names_opt:
+            row[feature_names_opt.index(lag_col)] = nv[i]
+
+    # 3. 1步差分 = 0（稳态，无变化）
+    for fname in feature_names_opt:
+        if '_diff1' in fname:
+            row[feature_names_opt.index(fname)] = 0.0
+
+    # 4. 区域汇总特征
+    n_box = len(nv)
+    region_map = {
+        'neg_front_mean': nv[:min(5, n_box)].mean(),
+        'neg_mid_mean':   nv[min(5, n_box):min(15, n_box)].mean() if n_box > 5 else nv.mean(),
+        'neg_rear_mean':  nv[min(15, n_box):].mean() if n_box > 15 else nv[-1],
+        'neg_range':      nv.max() - nv.min(),
+    }
+    for fname, val in region_map.items():
+        if fname in feature_names_opt:
+            row[feature_names_opt.index(fname)] = val
+
     return row.reshape(1, -1)
 
 
