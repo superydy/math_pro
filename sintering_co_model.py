@@ -318,13 +318,20 @@ feat_combined = feat_combined.select_dtypes(include=[np.number])
 feat_combined.dropna(axis=1, how='all', inplace=True)
 feat_combined.fillna(feat_combined.mean(), inplace=True)
 
-corr_mat = feat_combined.corr().abs()
+# 仅对非PCA列做相关性过滤，保护PCA主成分列不被剔除
+protected_cols = set(pca_cols)
+filter_target = feat_combined.drop(columns=[c for c in pca_cols if c in feat_combined.columns],
+                                   errors='ignore')
+corr_mat = filter_target.corr().abs()
 upper_tri = corr_mat.where(
     np.triu(np.ones(corr_mat.shape, dtype=bool), k=1)
 )
 drop_corr = [col for col in upper_tri.columns if any(upper_tri[col] > 0.95)]
 feat_combined.drop(columns=drop_corr, inplace=True, errors='ignore')
-print(f"  剔除高相关特征 {len(drop_corr)} 个")
+print(f"  剔除高相关特征 {len(drop_corr)} 个（PCA列受保护不被剔除）")
+# 确认PCA列情况
+survived_pca = [c for c in pca_cols if c in feat_combined.columns]
+print(f"  存活PCA列: {survived_pca}")
 print(f"  Step4完成，最终特征数: {feat_combined.shape[1]}")
 
 feature_names = feat_combined.columns.tolist()
@@ -554,11 +561,20 @@ pca_feat_indices = [feature_names.index(pc) for pc in pca_cols if pc in feature_
 print(f"  PCA列在特征矩阵中的位置: {pca_feat_indices}")
 
 
-def neg_to_feature_row(neg_values):
-    """将18个风箱负压值映射到最终特征向量（其余取均值）"""
+CO_LAG_FEAT_NAMES = (
+    [f'CO_lag{n}' for n in [1, 3, 5, 10, 20, 30]]
+    + ['CO_roll5_mean', 'CO_roll10_mean']
+)
+CO_STD_FEAT_NAMES = ['CO_roll5_std', 'CO_roll10_std']
+
+
+def neg_to_feature_row(neg_values, steady_co=None):
+    """将18个风箱负压值映射到最终特征向量。
+    steady_co: 稳态CO假设值（None时取均值）。
+    用于优化时，设 steady_co = 当前CO基准，让负压变化对预测可见。
+    """
     row = feat_mean_row.copy().values.astype(float)
     neg_arr = np.array(neg_values, dtype=float).reshape(1, -1)
-    # 长度对齐
     if neg_arr.shape[1] < len(neg_cols):
         pad = np.zeros((1, len(neg_cols) - neg_arr.shape[1]))
         neg_arr = np.hstack([neg_arr, pad])
@@ -569,15 +585,34 @@ def neg_to_feature_row(neg_values):
     for k, idx in enumerate(pca_feat_indices):
         if k < len(pca_val):
             row[idx] = pca_val[k]
+    # 稳态假设：CO_lag = steady_co，roll_std = 0（无波动）
+    if steady_co is not None:
+        for name in CO_LAG_FEAT_NAMES:
+            if name in feature_names:
+                row[feature_names.index(name)] = steady_co
+        for name in CO_STD_FEAT_NAMES:
+            if name in feature_names:
+                row[feature_names.index(name)] = 0.0
     return row.reshape(1, -1)
 
 
 LAMBDA_ADJ = 100.0  # 相邻差约束惩罚系数
 LAMBDA_AMP  = 100.0  # 调整幅度约束惩罚系数
 
+# 基准CO：均值工况下稳态预测（迭代2次收敛）
+_co0 = float(final_model.predict(neg_to_feature_row(neg_mean_opt))[0])
+for _ in range(2):
+    _co0 = float(final_model.predict(neg_to_feature_row(neg_mean_opt, steady_co=_co0))[0])
+CO_BASELINE = _co0
+print(f"  基准稳态CO（均值负压）: {CO_BASELINE:.2f} ppm")
 
-def opt_fitness(neg_vals):
-    """约束适应度函数：CO预测 + 软约束惩罚"""
+
+def opt_fitness(neg_vals, ref_co=None):
+    """约束适应度函数：稳态CO预测 + 软约束惩罚。
+    ref_co: 稳态CO参考值（用于CO_lag特征），默认取CO_BASELINE。
+    """
+    if ref_co is None:
+        ref_co = CO_BASELINE
     penalty = 0.0
     # 约束2：相邻风箱负压差 > 3 kPa
     for k in range(len(neg_vals) - 1):
@@ -590,7 +625,7 @@ def opt_fitness(neg_vals):
         if ratio > 0.20:
             penalty += LAMBDA_AMP * (ratio - 0.20)
 
-    feat_row = neg_to_feature_row(neg_vals)
+    feat_row = neg_to_feature_row(neg_vals, steady_co=ref_co)
     co_pred = float(final_model.predict(feat_row)[0])
     return co_pred + penalty
 
@@ -635,11 +670,15 @@ for it in range(1, N_OPT_ITER + 1):
     if it % 50 == 0:
         print(f"  迭代 {it:4d} / {N_OPT_ITER}  当前最优CO = {opt_gbest_val:.2f} ppm")
 
-# 计算纯CO预测（不含惩罚）
-co_before_opt = float(final_model.predict(neg_to_feature_row(neg_mean_opt))[0])
-co_after_opt  = float(final_model.predict(neg_to_feature_row(opt_gbest_pos))[0])
-print(f"\n  优化前CO（均值工况）: {co_before_opt:.2f} ppm")
-print(f"  优化后CO（最优负压）: {co_after_opt:.2f} ppm")
+# 稳态CO：用优化结果迭代求解固定点（CO_lag = 预测CO）
+co_before_opt = CO_BASELINE
+co_after_iter = float(final_model.predict(neg_to_feature_row(opt_gbest_pos, steady_co=CO_BASELINE))[0])
+for _ in range(3):  # 迭代收敛
+    co_after_iter = float(final_model.predict(
+        neg_to_feature_row(opt_gbest_pos, steady_co=co_after_iter))[0])
+co_after_opt = co_after_iter
+print(f"\n  优化前稳态CO（均值工况）: {co_before_opt:.2f} ppm")
+print(f"  优化后稳态CO（最优负压）: {co_after_opt:.2f} ppm")
 print(f"  CO降低: {co_before_opt - co_after_opt:.2f} ppm "
       f"({(co_before_opt - co_after_opt)/max(co_before_opt, 1)*100:.1f}%)")
 
@@ -712,7 +751,8 @@ for i, col in enumerate(neg_cols):
     for sv in scan:
         nv = neg_mean_opt.copy()
         nv[i] = sv
-        co_scan.append(float(final_model.predict(neg_to_feature_row(nv))[0]))
+        # 用稳态CO假设，使负压对CO的影响可见
+        co_scan.append(float(final_model.predict(neg_to_feature_row(nv, steady_co=CO_BASELINE))[0]))
     sensitivity_arr.append(max(co_scan) - min(co_scan))
 
 sensitivity_arr = np.array(sensitivity_arr)
@@ -722,8 +762,9 @@ print(f"  最敏感风箱: {neg_cols[most_sens_idx]}，CO响应幅度: {sensitiv
 fig9, ax9 = plt.subplots(figsize=(14, 5))
 bar_colors9 = ['#E84855' if i == most_sens_idx else '#2E86AB' for i in range(len(neg_cols))]
 ax9.bar(short_labels, sensitivity_arr, color=bar_colors9, alpha=0.85)
-ax9.text(most_sens_idx, sensitivity_arr[most_sens_idx] + sensitivity_arr.max() * 0.02,
-         '最敏感', ha='center', va='bottom', color='#E84855', fontsize=10, fontweight='bold')
+if sensitivity_arr.max() > 0:
+    ax9.text(most_sens_idx, sensitivity_arr[most_sens_idx] + sensitivity_arr.max() * 0.02,
+             '最敏感', ha='center', va='bottom', color='#E84855', fontsize=10, fontweight='bold')
 ax9.set_xlabel('风箱编号', fontsize=12)
 ax9.set_ylabel('CO响应幅度 (ppm)', fontsize=12)
 ax9.set_title('图9：各风箱负压敏感性分析（CO响应幅度）', fontsize=13, fontweight='bold', pad=10)
