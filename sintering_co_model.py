@@ -533,6 +533,27 @@ fig5.savefig(os.path.join(OUTPUT_DIR, 'P2_fig5_feature_importance.png'), dpi=150
 plt.close(fig5)
 print("  图5已保存: P2_fig5_feature_importance.png")
 
+# ============================================================
+# 专用优化模型：去掉CO_lag时序特征，使负压→CO关系清晰可控
+# CO_lag是历史状态，不是可操控的决策变量，不适合放入优化目标
+# ============================================================
+print("\n  [附] 训练优化专用模型（去除CO_lag时序特征）...")
+CO_LAG_FEAT_NAMES_ALL = (
+    [f'CO_lag{n}' for n in [1, 3, 5, 10, 20, 30]]
+    + ['CO_roll5_mean', 'CO_roll10_mean', 'CO_roll5_std', 'CO_roll10_std']
+)
+drop_lag_cols = [c for c in CO_LAG_FEAT_NAMES_ALL if c in feat_combined.columns]
+feat_opt_df = feat_combined.drop(columns=drop_lag_cols)
+feature_names_opt = feat_opt_df.columns.tolist()
+X_opt = feat_opt_df.values
+
+opt_phys_model = lgb.LGBMRegressor(**best_params, random_state=42, verbose=-1, n_jobs=-1)
+opt_phys_model.fit(X_opt[:train_size], y[:train_size])
+y_opt_test_pred = opt_phys_model.predict(X_opt[train_size:])
+opt_r2 = r2_score(y[train_size:], y_opt_test_pred)
+print(f"  优化模型（无CO_lag）测试集 R²={opt_r2:.4f}")
+print(f"  优化模型特征数: {len(feature_names_opt)}")
+
 
 # ============================================================
 # Step 8: 确定各风箱负压调节范围（5%~95% 分位数）
@@ -552,81 +573,49 @@ for c, lb, m, ub in zip(neg_cols, neg_lb_opt, neg_mean_opt, neg_ub_opt):
 # Step 9: 约束PSO优化（60粒子 × 200迭代，最小化CO）
 # ============================================================
 print("\n[Step 9] 约束PSO优化风箱负压（60粒子，200迭代）...")
+print("  （使用无CO_lag的物理优化模型，决策变量→CO关系清晰可见）")
 
-# 用于从18个负压值构造特征向量
-feat_mean_row = feat_combined.mean()  # 其他特征的均值基线
-
-# PCA列在最终特征中的位置
-pca_feat_indices = [feature_names.index(pc) for pc in pca_cols if pc in feature_names]
-print(f"  PCA列在特征矩阵中的位置: {pca_feat_indices}")
-
-
-CO_LAG_FEAT_NAMES = (
-    [f'CO_lag{n}' for n in [1, 3, 5, 10, 20, 30]]
-    + ['CO_roll5_mean', 'CO_roll10_mean']
-)
-CO_STD_FEAT_NAMES = ['CO_roll5_std', 'CO_roll10_std']
+# 优化专用特征均值行（无CO_lag）
+feat_opt_mean_row = feat_opt_df.mean()
+# PCA列在优化特征中的位置
+pca_opt_indices = [feature_names_opt.index(pc) for pc in pca_cols if pc in feature_names_opt]
+print(f"  PCA列在优化特征矩阵中的位置: {pca_opt_indices}")
 
 
-def neg_to_feature_row(neg_values, steady_co=None):
-    """将18个风箱负压值映射到最终特征向量。
-    steady_co: 稳态CO假设值（None时取均值）。
-    用于优化时，设 steady_co = 当前CO基准，让负压变化对预测可见。
-    """
-    row = feat_mean_row.copy().values.astype(float)
+def neg_to_opt_feat_row(neg_values):
+    """将18个风箱负压映射到优化模型特征向量（无CO_lag特征）"""
+    row = feat_opt_mean_row.copy().values.astype(float)
     neg_arr = np.array(neg_values, dtype=float).reshape(1, -1)
     if neg_arr.shape[1] < len(neg_cols):
-        pad = np.zeros((1, len(neg_cols) - neg_arr.shape[1]))
-        neg_arr = np.hstack([neg_arr, pad])
+        neg_arr = np.hstack([neg_arr, np.zeros((1, len(neg_cols) - neg_arr.shape[1]))])
     elif neg_arr.shape[1] > len(neg_cols):
         neg_arr = neg_arr[:, :len(neg_cols)]
-    neg_scaled_val = scaler_pca.transform(neg_arr)
-    pca_val = pca_model.transform(neg_scaled_val)[0]
-    for k, idx in enumerate(pca_feat_indices):
+    pca_val = pca_model.transform(scaler_pca.transform(neg_arr))[0]
+    for k, idx in enumerate(pca_opt_indices):
         if k < len(pca_val):
             row[idx] = pca_val[k]
-    # 稳态假设：CO_lag = steady_co，roll_std = 0（无波动）
-    if steady_co is not None:
-        for name in CO_LAG_FEAT_NAMES:
-            if name in feature_names:
-                row[feature_names.index(name)] = steady_co
-        for name in CO_STD_FEAT_NAMES:
-            if name in feature_names:
-                row[feature_names.index(name)] = 0.0
     return row.reshape(1, -1)
 
 
-LAMBDA_ADJ = 100.0  # 相邻差约束惩罚系数
-LAMBDA_AMP  = 100.0  # 调整幅度约束惩罚系数
+LAMBDA_ADJ = 100.0
+LAMBDA_AMP  = 100.0
 
-# 基准CO：均值工况下稳态预测（迭代2次收敛）
-_co0 = float(final_model.predict(neg_to_feature_row(neg_mean_opt))[0])
-for _ in range(2):
-    _co0 = float(final_model.predict(neg_to_feature_row(neg_mean_opt, steady_co=_co0))[0])
-CO_BASELINE = _co0
-print(f"  基准稳态CO（均值负压）: {CO_BASELINE:.2f} ppm")
+co_before_opt = float(opt_phys_model.predict(neg_to_opt_feat_row(neg_mean_opt))[0])
+print(f"  基准CO（均值负压，物理模型）: {co_before_opt:.2f} ppm")
 
 
-def opt_fitness(neg_vals, ref_co=None):
-    """约束适应度函数：稳态CO预测 + 软约束惩罚。
-    ref_co: 稳态CO参考值（用于CO_lag特征），默认取CO_BASELINE。
-    """
-    if ref_co is None:
-        ref_co = CO_BASELINE
+def opt_fitness(neg_vals):
+    """约束适应度函数：物理模型CO预测 + 软约束惩罚"""
     penalty = 0.0
-    # 约束2：相邻风箱负压差 > 3 kPa
     for k in range(len(neg_vals) - 1):
         diff = abs(float(neg_vals[k + 1]) - float(neg_vals[k]))
         if diff > 3.0:
             penalty += LAMBDA_ADJ * (diff - 3.0)
-    # 约束3：单个调整幅度 > 20% 当前均值
     for k, (v, m) in enumerate(zip(neg_vals, neg_mean_opt)):
         ratio = abs(v - m) / (abs(m) + 1e-8)
         if ratio > 0.20:
             penalty += LAMBDA_AMP * (ratio - 0.20)
-
-    feat_row = neg_to_feature_row(neg_vals, steady_co=ref_co)
-    co_pred = float(final_model.predict(feat_row)[0])
+    co_pred = float(opt_phys_model.predict(neg_to_opt_feat_row(neg_vals))[0])
     return co_pred + penalty
 
 
@@ -670,15 +659,9 @@ for it in range(1, N_OPT_ITER + 1):
     if it % 50 == 0:
         print(f"  迭代 {it:4d} / {N_OPT_ITER}  当前最优CO = {opt_gbest_val:.2f} ppm")
 
-# 稳态CO：用优化结果迭代求解固定点（CO_lag = 预测CO）
-co_before_opt = CO_BASELINE
-co_after_iter = float(final_model.predict(neg_to_feature_row(opt_gbest_pos, steady_co=CO_BASELINE))[0])
-for _ in range(3):  # 迭代收敛
-    co_after_iter = float(final_model.predict(
-        neg_to_feature_row(opt_gbest_pos, steady_co=co_after_iter))[0])
-co_after_opt = co_after_iter
-print(f"\n  优化前稳态CO（均值工况）: {co_before_opt:.2f} ppm")
-print(f"  优化后稳态CO（最优负压）: {co_after_opt:.2f} ppm")
+co_after_opt = float(opt_phys_model.predict(neg_to_opt_feat_row(opt_gbest_pos))[0])
+print(f"\n  优化前CO（均值工况）: {co_before_opt:.2f} ppm")
+print(f"  优化后CO（最优负压）: {co_after_opt:.2f} ppm")
 print(f"  CO降低: {co_before_opt - co_after_opt:.2f} ppm "
       f"({(co_before_opt - co_after_opt)/max(co_before_opt, 1)*100:.1f}%)")
 
@@ -752,7 +735,7 @@ for i, col in enumerate(neg_cols):
         nv = neg_mean_opt.copy()
         nv[i] = sv
         # 用稳态CO假设，使负压对CO的影响可见
-        co_scan.append(float(final_model.predict(neg_to_feature_row(nv, steady_co=CO_BASELINE))[0]))
+        co_scan.append(float(opt_phys_model.predict(neg_to_opt_feat_row(nv))[0]))
     sensitivity_arr.append(max(co_scan) - min(co_scan))
 
 sensitivity_arr = np.array(sensitivity_arr)
@@ -797,10 +780,12 @@ print(f"  累计解释方差: {cumvar[n_components-1]*100:.2f}%")
 for i in range(n_components):
     print(f"  PC{i+1}: {pca_model.explained_variance_ratio_[i]*100:.2f}%")
 
-print(f"\n【PSO-LightGBM模型性能】")
+print(f"\n【PSO-LightGBM模型性能（含CO_lag特征，用于预测精度）】")
 print(f"  训练集 RMSE={tr_rmse:.2f}  MAE={tr_mae:.2f}  R²={tr_r2:.4f}  MAPE={tr_mape:.2f}%")
 print(f"  测试集 RMSE={te_rmse:.2f}  MAE={te_mae:.2f}  R²={te_r2:.4f}  MAPE={te_mape:.2f}%")
 print(f"  过拟合指标 ΔR² = {tr_r2 - te_r2:.4f}")
+print(f"\n【优化专用模型性能（无CO_lag，决策变量→CO关系直接可控）】")
+print(f"  测试集 R² = {opt_r2:.4f}")
 
 print(f"\n【约束PSO优化结果】")
 print(f"  优化前CO: {co_before_opt:.2f} ppm")
