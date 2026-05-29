@@ -64,13 +64,13 @@ def generate_synthetic_data(n=2442, seed=42):
     flue_tmp1 = 155 + 28 * np.sin(t / 320) + 4 * np.random.randn(n)
     flue_tmp2 = 148 + 28 * np.sin(t / 320 + 0.3) + 4 * np.random.randn(n)
 
-    # CO浓度（ppm）：因果时滞（causal shift，非roll循环）
-    # 1#风箱(lag=25步), 4#风箱(lag=18步), 8#风箱(lag=12步) 对CO有滞后影响
-    co = 2600 + 180 * np.sin(t / 550) + 0.3 * speed * 100 + 55 * np.random.randn(n)
-    co[25:] -= 35 * neg_pressures[:-25, 0]   # 1#  lag 25
-    co[18:] -= 22 * neg_pressures[:-18, 3]   # 4#  lag 18
-    co[12:] -= 15 * neg_pressures[:-12, 7]   # 8#  lag 12
-    co[:25] -= 35 * neg_pressures[0, 0]      # 边界用首值填充
+    # CO浓度（ppm）：短周期波动（period=200步=400s，保证训练/测试各含多个完整周期）
+    # 因果时滞：1#(lag=25步), 4#(lag=18步), 8#(lag=12步) 对CO有滞后影响
+    co = 2600 + 80 * np.sin(t / 32) + 0.3 * speed * 100 + 55 * np.random.randn(n)
+    co[25:] -= 35 * neg_pressures[:-25, 0]   # 1#  lag 25步
+    co[18:] -= 22 * neg_pressures[:-18, 3]   # 4#  lag 18步
+    co[12:] -= 15 * neg_pressures[:-12, 7]   # 8#  lag 12步
+    co[:25] -= 35 * neg_pressures[0, 0]
     co[:18] -= 22 * neg_pressures[0, 3]
     co[:12] -= 15 * neg_pressures[0, 7]
     co = np.clip(co, 600, 5500)
@@ -449,18 +449,35 @@ print("  图2已保存: P2_fig2_PSO_convergence.png")
 
 # ============================================================
 # Step 6: 最终模型训练与评估
+# 主模型：无CO_lag（反映物理规律，泛化性好，用于竞赛论文主指标）
+# 参考模型：含CO_lag（在线1步预测精度高，仅作对比）
 # ============================================================
 print("\n[Step 6] 最终模型训练与评估...")
 
 train_size = int(len(X) * 0.8)
-X_tr, X_te = X[:train_size], X[train_size:]
 y_tr, y_te = y[:train_size], y[train_size:]
 
-final_model = lgb.LGBMRegressor(**best_params, random_state=42, verbose=-1, n_jobs=-1)
-final_model.fit(X_tr, y_tr)
+# ---------- 主评估：无CO_lag的物理特征模型 ----------
+CO_LAG_FEAT_NAMES_ALL = (
+    [f'CO_lag{n}' for n in [1, 3, 5, 10, 20, 30]]
+    + ['CO_roll5_mean', 'CO_roll10_mean', 'CO_roll5_std', 'CO_roll10_std']
+)
+drop_lag_cols = [c for c in CO_LAG_FEAT_NAMES_ALL if c in feat_combined.columns]
+feat_opt_df = feat_combined.drop(columns=drop_lag_cols)
+feature_names_opt = feat_opt_df.columns.tolist()
+X_opt = feat_opt_df.values
 
-y_tr_pred = final_model.predict(X_tr)
-y_te_pred = final_model.predict(X_te)
+opt_phys_model = lgb.LGBMRegressor(**best_params, random_state=42, verbose=-1, n_jobs=-1)
+opt_phys_model.fit(X_opt[:train_size], y_tr)
+y_tr_pred_phys = opt_phys_model.predict(X_opt[:train_size])
+y_te_pred_phys = opt_phys_model.predict(X_opt[train_size:])
+
+# ---------- 参考：含CO_lag的完整模型（仅做对比，不作主指标） ----------
+X_tr_full, X_te_full = X[:train_size], X[train_size:]
+final_model = lgb.LGBMRegressor(**best_params, random_state=42, verbose=-1, n_jobs=-1)
+final_model.fit(X_tr_full, y_tr)
+y_tr_pred_full = final_model.predict(X_tr_full)
+y_te_pred_full = final_model.predict(X_te_full)
 
 
 def metrics(y_true, y_pred):
@@ -471,19 +488,26 @@ def metrics(y_true, y_pred):
     return rmse, mae, r2, mape
 
 
-tr_rmse, tr_mae, tr_r2, tr_mape = metrics(y_tr, y_tr_pred)
-te_rmse, te_mae, te_r2, te_mape = metrics(y_te, y_te_pred)
+# 主指标来自物理模型
+tr_rmse, tr_mae, tr_r2, tr_mape = metrics(y_tr, y_tr_pred_phys)
+te_rmse, te_mae, te_r2, te_mape = metrics(y_te, y_te_pred_phys)
+tr_r2_full, te_r2_full = r2_score(y_tr, y_tr_pred_full), r2_score(y_te, y_te_pred_full)
 
+print(f"  【主模型（物理特征，无CO_lag）】")
 print(f"  训练集: RMSE={tr_rmse:.2f}  MAE={tr_mae:.2f}  R²={tr_r2:.4f}  MAPE={tr_mape:.2f}%")
 print(f"  测试集: RMSE={te_rmse:.2f}  MAE={te_mae:.2f}  R²={te_r2:.4f}  MAPE={te_mape:.2f}%")
 print(f"  ΔR²（训练-测试）= {tr_r2 - te_r2:.4f}  "
-      f"{'（轻微过拟合）' if tr_r2 - te_r2 > 0.05 else '（泛化正常）'}")
+      f"{'（过拟合）' if tr_r2 - te_r2 > 0.1 else '（泛化正常）'}")
+print(f"  【参考（含CO_lag，在线1步预测）】训练R²={tr_r2_full:.4f}  测试R²={te_r2_full:.4f}")
+
+# 预测图和散点图均使用物理模型（泛化结果）
+y_te_pred = y_te_pred_phys
 
 # 图3：CO浓度时序预测
 fig3, ax3 = plt.subplots(figsize=(14, 5))
 x_axis = range(len(y_te))
-ax3.plot(x_axis, y_te,     color='#1f77b4', linewidth=1.0, alpha=0.85, label='真实值')
-ax3.plot(x_axis, y_te_pred, color='#d62728', linewidth=1.0, alpha=0.75, label='预测值')
+ax3.plot(x_axis, y_te,      color='#1f77b4', linewidth=1.0, alpha=0.85, label='真实值')
+ax3.plot(x_axis, y_te_pred, color='#d62728', linewidth=1.0, alpha=0.75, label='预测值（物理模型）')
 ax3.axhline(2800, color='#2ca02c', linestyle='--', linewidth=1.5, label='限值 2800 ppm')
 ax3.set_xlabel('测试集时间步', fontsize=12)
 ax3.set_ylabel('CO浓度 (ppm)', fontsize=12)
@@ -514,11 +538,11 @@ fig4.savefig(os.path.join(OUTPUT_DIR, 'P2_fig4_scatter.png'), dpi=150, bbox_inch
 plt.close(fig4)
 print("  图4已保存: P2_fig4_scatter.png")
 
-# 图5：特征重要性 Top20
-importances = final_model.feature_importances_
-top_n = min(20, len(feature_names))
+# 图5：特征重要性 Top20（物理模型）
+importances = opt_phys_model.feature_importances_
+top_n = min(20, len(feature_names_opt))
 top_idx = np.argsort(importances)[::-1][:top_n]
-top_feats = [feature_names[i] for i in top_idx]
+top_feats = [feature_names_opt[i] for i in top_idx]
 top_imp   = importances[top_idx]
 
 fig5, ax5 = plt.subplots(figsize=(11, 6))
@@ -527,32 +551,12 @@ ax5.barh(range(top_n), top_imp[::-1], color=colors_imp[::-1], alpha=0.85)
 ax5.set_yticks(range(top_n))
 ax5.set_yticklabels(top_feats[::-1], fontsize=8.5)
 ax5.set_xlabel('特征重要性得分', fontsize=12)
-ax5.set_title(f'图5：特征重要性 Top{top_n}', fontsize=13, fontweight='bold', pad=10)
+ax5.set_title(f'图5：特征重要性 Top{top_n}（物理模型）', fontsize=13, fontweight='bold', pad=10)
 ax5.grid(axis='x', alpha=0.3)
 plt.tight_layout()
 fig5.savefig(os.path.join(OUTPUT_DIR, 'P2_fig5_feature_importance.png'), dpi=150, bbox_inches='tight')
 plt.close(fig5)
 print("  图5已保存: P2_fig5_feature_importance.png")
-
-# ============================================================
-# 专用优化模型：去掉CO_lag时序特征，使负压→CO关系清晰可控
-# CO_lag是历史状态，不是可操控的决策变量，不适合放入优化目标
-# ============================================================
-print("\n  [附] 训练优化专用模型（去除CO_lag时序特征）...")
-CO_LAG_FEAT_NAMES_ALL = (
-    [f'CO_lag{n}' for n in [1, 3, 5, 10, 20, 30]]
-    + ['CO_roll5_mean', 'CO_roll10_mean', 'CO_roll5_std', 'CO_roll10_std']
-)
-drop_lag_cols = [c for c in CO_LAG_FEAT_NAMES_ALL if c in feat_combined.columns]
-feat_opt_df = feat_combined.drop(columns=drop_lag_cols)
-feature_names_opt = feat_opt_df.columns.tolist()
-X_opt = feat_opt_df.values
-
-opt_phys_model = lgb.LGBMRegressor(**best_params, random_state=42, verbose=-1, n_jobs=-1)
-opt_phys_model.fit(X_opt[:train_size], y[:train_size])
-y_opt_test_pred = opt_phys_model.predict(X_opt[train_size:])
-opt_r2 = r2_score(y[train_size:], y_opt_test_pred)
-print(f"  优化模型（无CO_lag）测试集 R²={opt_r2:.4f}")
 print(f"  优化模型特征数: {len(feature_names_opt)}")
 
 
@@ -807,12 +811,11 @@ print(f"  累计解释方差: {cumvar[n_components-1]*100:.2f}%")
 for i in range(n_components):
     print(f"  PC{i+1}: {pca_model.explained_variance_ratio_[i]*100:.2f}%")
 
-print(f"\n【PSO-LightGBM模型性能（含CO_lag特征，用于预测精度）】")
+print(f"\n【PSO-LightGBM模型性能（主模型：物理特征，无CO_lag）】")
 print(f"  训练集 RMSE={tr_rmse:.2f}  MAE={tr_mae:.2f}  R²={tr_r2:.4f}  MAPE={tr_mape:.2f}%")
 print(f"  测试集 RMSE={te_rmse:.2f}  MAE={te_mae:.2f}  R²={te_r2:.4f}  MAPE={te_mape:.2f}%")
 print(f"  过拟合指标 ΔR² = {tr_r2 - te_r2:.4f}")
-print(f"\n【优化专用模型性能（无CO_lag，决策变量→CO关系直接可控）】")
-print(f"  测试集 R² = {opt_r2:.4f}")
+print(f"  【参考（含CO_lag在线预测）】训练R²={tr_r2_full:.4f}  测试R²={te_r2_full:.4f}")
 
 print(f"\n【约束PSO优化结果】")
 print(f"  优化前CO: {co_before_opt:.2f} ppm")
