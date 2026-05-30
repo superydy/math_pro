@@ -155,14 +155,15 @@ def build_fv(pressures, temperatures, speed, fixed_vals, co_star, all_features):
 # 稳态不动点迭代（多起点，取最低稳态CO）
 # ============================================================
 def steady_co(pressures, temperatures, speed, fixed_vals, model, scaler,
-              all_features, max_iter=100, tol=0.3):
+              all_features, max_iter=40, tol=0.5):
     """
     多起点初始化：从5个不同CO水平出发迭代，取收敛到的最低稳态值。
     物理意义：系统可能存在多稳态，寻找最低的稳定平衡点。
     """
     alpha = 0.4
     # 从低到高的多个初始值
-    init_vals = [200, 500, 1000, 1500, 2000, fixed_vals['co_median']]
+    # 两个起点：低CO稳态探测(200) + 历史均值（兜底）
+    init_vals = [200, fixed_vals['co_median']]
     best_co = np.inf
 
     for co0 in init_vals:
@@ -175,7 +176,6 @@ def steady_co(pressures, temperatures, speed, fixed_vals, model, scaler,
                 converged = True
                 break
             co = alpha * co_new + (1-alpha) * co
-        # 只接受真正收敛的结果
         if converged and co < best_co:
             best_co = co
 
@@ -507,7 +507,7 @@ def main():
     # DE优化
     p("\n[Step 6] Differential Evolution 全局优化（37维）...")
     opt_x, de_co, de_hist = run_de(bounds_37, fixed_vals, model, scaler, all_features,
-                                   popsize=20, maxiter=300, seed=42)
+                                   popsize=6, maxiter=80, seed=42)
 
     # 局部精化
     p("\n[Step 7] Nelder-Mead 局部精化...")
