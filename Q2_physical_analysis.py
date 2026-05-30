@@ -38,8 +38,16 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-plt.rcParams['font.sans-serif'] = ['SimHei', 'DejaVu Sans']
+import matplotlib.font_manager as fm
+_font_path = '/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc'
+fm.fontManager.addfont(_font_path)
+_fp = fm.FontProperties(fname=_font_path)
+_FONT = _fp.get_name()
+plt.rcParams['font.family'] = _FONT
 plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams['figure.dpi'] = 120
+plt.rcParams['axes.spines.top'] = False
+plt.rcParams['axes.spines.right'] = False
 
 
 def print_flush(msg):
@@ -341,27 +349,24 @@ def step5_partial_dependence_plots(rf, df, var_list):
             else:
                 shape = "非线性"
         
-        ax.set_title(f'{var_name}\n方向:{direction}, 形状:{shape}', fontsize=11)
-        ax.set_xlabel(f'{var_name}', fontsize=10)
-        ax.set_ylabel('预测CO均值 (mg/m³)', fontsize=10)
-        ax.grid(True, alpha=0.3)
-        
-        # 标注变化幅度
         delta = pdp_vals[-1] - pdp_vals[0]
-        ax.text(0.05, 0.95, f'ΔCO={delta:+.0f} mg/m³',
-                transform=ax.transAxes, fontsize=10, va='top',
-                bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.8))
-        
+        ax.set_title(f'{var_name}  (ΔCO={delta:+.0f})', fontproperties=_fp, fontsize=10)
+        ax.set_xlabel(var_name, fontproperties=_fp, fontsize=9)
+        ax.set_ylabel('平均预测CO (mg/m³)', fontproperties=_fp, fontsize=9)
+        ax.tick_params(labelsize=8)
+        ax.grid(axis='y', linestyle='--', alpha=0.4)
+
         pdp_results.append({
             'variable': var_name,
             'direction': direction,
             'shape': shape,
             'co_change': round(float(delta), 1)
         })
-    
-    plt.suptitle('偏依赖图（PDP）：各物理参数对CO浓度的影响', fontsize=16, fontweight='bold')
+
+    plt.suptitle('偏依赖图（PDP）——各物理参数对CO浓度的边际效应',
+                 fontproperties=_fp, fontsize=12, y=1.01)
     plt.tight_layout()
-    plt.savefig('figures/Q2B_pdp_top9.png', dpi=200, bbox_inches='tight')
+    plt.savefig('figures/Q2B_pdp_top9.png', dpi=150, bbox_inches='tight')
     plt.close()
     print_flush("  ✓ figures/Q2B_pdp_top9.png")
     
@@ -426,29 +431,30 @@ def step6_zone_analysis(df):
     p_corrs = [zone_results[z]['pressure_corr'] for z in zone_names]
     t_corrs = [zone_results[z]['temp_corr'] for z in zone_names]
     
-    colors_p = ['#2196F3', '#FF9800', '#F44336']
-    colors_t = ['#2196F3', '#FF9800', '#F44336']
-    
-    axes[0].bar(zone_names, p_corrs, color=colors_p, alpha=0.8)
-    axes[0].axhline(y=0, color='black', lw=0.5)
-    axes[0].set_ylabel('与CO的Pearson相关系数')
-    axes[0].set_title('各分区负压对CO的影响')
-    axes[0].grid(True, alpha=0.3, axis='y')
+    bar_colors = ['#4472C4', '#ED7D31', '#A9D18E']
+
+    axes[0].bar(zone_names, p_corrs, color=bar_colors, width=0.5)
+    axes[0].axhline(y=0, color='black', lw=0.8, ls='--')
+    axes[0].set_ylabel('Pearson相关系数', fontproperties=_fp)
+    axes[0].set_title('各分区负压均值与CO相关性', fontproperties=_fp)
+    axes[0].set_xticklabels(zone_names, fontproperties=_fp)
+    axes[0].grid(axis='y', linestyle='--', alpha=0.4)
     for i, v in enumerate(p_corrs):
-        axes[0].text(i, v + (0.005 if v >= 0 else -0.015), f'{v:.4f}', 
-                    ha='center', va='bottom' if v >= 0 else 'top', fontsize=11, fontweight='bold')
-    
-    axes[1].bar(zone_names, t_corrs, color=colors_t, alpha=0.8)
-    axes[1].axhline(y=0, color='black', lw=0.5)
-    axes[1].set_ylabel('与CO的Pearson相关系数')
-    axes[1].set_title('各分区温度对CO的影响')
-    axes[1].grid(True, alpha=0.3, axis='y')
+        axes[0].text(i, v + (0.004 if v >= 0 else -0.012), f'{v:.4f}',
+                     ha='center', va='bottom' if v >= 0 else 'top', fontsize=10)
+
+    axes[1].bar(zone_names, t_corrs, color=bar_colors, width=0.5)
+    axes[1].axhline(y=0, color='black', lw=0.8, ls='--')
+    axes[1].set_ylabel('Pearson相关系数', fontproperties=_fp)
+    axes[1].set_title('各分区温度均值与CO相关性', fontproperties=_fp)
+    axes[1].set_xticklabels(zone_names, fontproperties=_fp)
+    axes[1].grid(axis='y', linestyle='--', alpha=0.4)
     for i, v in enumerate(t_corrs):
-        axes[1].text(i, v + (0.005 if v >= 0 else -0.015), f'{v:.4f}', 
-                    ha='center', va='bottom' if v >= 0 else 'top', fontsize=11, fontweight='bold')
-    
+        axes[1].text(i, v + (0.004 if v >= 0 else -0.012), f'{v:.4f}',
+                     ha='center', va='bottom' if v >= 0 else 'top', fontsize=10)
+
     plt.tight_layout()
-    plt.savefig('figures/Q2B_zone_analysis.png', dpi=200, bbox_inches='tight')
+    plt.savefig('figures/Q2B_zone_analysis.png', dpi=150, bbox_inches='tight')
     plt.close()
     print_flush("  ✓ figures/Q2B_zone_analysis.png")
     
@@ -466,154 +472,148 @@ def step7_visualization(corr_sorted, ridge_results, rf_results, rf_category):
     
     os.makedirs('figures', exist_ok=True)
     
-    # ---- 图1: 相关性排序图 ----
-    fig, ax = plt.subplots(figsize=(10, 12))
-    
+    from matplotlib.patches import Patch
+
+    def _fp_label(ax_obj):
+        for lbl in ax_obj.get_yticklabels() + ax_obj.get_xticklabels():
+            lbl.set_fontproperties(_fp)
+
+    # ---- 图1: 相关性排序图（Top 20）----
+    fig, ax = plt.subplots(figsize=(9, 10))
     top20 = corr_sorted[:20]
     names = [r['variable'] for r in top20][::-1]
     corrs = [r['pearson'] for r in top20][::-1]
-    
-    colors = ['#F44336' if c > 0 else '#2196F3' for c in corrs]
-    
-    ax.barh(range(len(names)), corrs, color=colors, alpha=0.8)
+    clrs  = ['#C0392B' if c > 0 else '#2980B9' for c in corrs]
+    ax.barh(range(len(names)), corrs, color=clrs, height=0.65)
     ax.set_yticks(range(len(names)))
-    ax.set_yticklabels(names, fontsize=10)
-    ax.set_xlabel('Pearson相关系数', fontsize=12)
-    ax.set_title('Top 20: 物理参数与CO浓度的相关性', fontsize=14, fontweight='bold')
-    ax.axvline(x=0, color='black', lw=0.5)
-    ax.grid(True, alpha=0.3, axis='x')
-    
-    # 图例
-    from matplotlib.patches import Patch
-    legend = [
-        Patch(facecolor='#F44336', alpha=0.8, label='正相关(↑CO)'),
-        Patch(facecolor='#2196F3', alpha=0.8, label='负相关(↓CO)'),
-    ]
-    ax.legend(handles=legend, fontsize=10, loc='lower right')
-    
+    ax.set_yticklabels(names, fontsize=9)
+    _fp_label(ax)
+    ax.set_xlabel('Pearson 相关系数', fontproperties=_fp, fontsize=10)
+    ax.set_title('物理参数与CO浓度相关性排序（Top 20）', fontproperties=_fp, fontsize=11)
+    ax.axvline(x=0, color='#555', lw=0.8)
+    ax.grid(axis='x', linestyle='--', alpha=0.35)
+    handles = [Patch(color='#C0392B', label='正相关（↑CO）'),
+               Patch(color='#2980B9', label='负相关（↓CO）')]
+    ax.legend(handles=handles, prop=_fp, fontsize=9, loc='lower right')
     plt.tight_layout()
-    plt.savefig('figures/Q2B_correlation_ranking.png', dpi=200, bbox_inches='tight')
+    plt.savefig('figures/Q2B_correlation_ranking.png', dpi=150, bbox_inches='tight')
     plt.close()
     print_flush("  ✓ figures/Q2B_correlation_ranking.png")
-    
-    # ---- 图2: Ridge回归系数图 ----
-    fig, ax = plt.subplots(figsize=(10, 12))
-    
-    top20_ridge = ridge_results[:20]
-    names_r = [r['variable'] for r in top20_ridge][::-1]
-    coeffs_r = [r['coefficient'] for r in top20_ridge][::-1]
-    
-    colors_r = ['#F44336' if c > 0 else '#2196F3' for c in coeffs_r]
-    
-    ax.barh(range(len(names_r)), coeffs_r, color=colors_r, alpha=0.8)
+
+    # ---- 图2: Ridge 回归系数（Top 20）----
+    fig, ax = plt.subplots(figsize=(9, 10))
+    top20r = ridge_results[:20]
+    names_r  = [r['variable'] for r in top20r][::-1]
+    coeffs_r = [r['coefficient'] for r in top20r][::-1]
+    clrs_r   = ['#C0392B' if c > 0 else '#2980B9' for c in coeffs_r]
+    ax.barh(range(len(names_r)), coeffs_r, color=clrs_r, height=0.65)
     ax.set_yticks(range(len(names_r)))
-    ax.set_yticklabels(names_r, fontsize=10)
-    ax.set_xlabel('Ridge回归系数（标准化后）', fontsize=12)
-    ax.set_title('Top 20: Ridge回归系数（线性影响方向和强度）', fontsize=14, fontweight='bold')
-    ax.axvline(x=0, color='black', lw=0.5)
-    ax.grid(True, alpha=0.3, axis='x')
-    ax.legend(handles=legend, fontsize=10, loc='lower right')
-    
+    ax.set_yticklabels(names_r, fontsize=9)
+    _fp_label(ax)
+    ax.set_xlabel('Ridge 回归系数（输入标准化后）', fontproperties=_fp, fontsize=10)
+    ax.set_title('各变量线性影响方向与强度（Ridge 回归，Top 20）', fontproperties=_fp, fontsize=11)
+    ax.axvline(x=0, color='#555', lw=0.8)
+    ax.grid(axis='x', linestyle='--', alpha=0.35)
+    ax.legend(handles=handles, prop=_fp, fontsize=9, loc='lower right')
     plt.tight_layout()
-    plt.savefig('figures/Q2B_ridge_coefficients.png', dpi=200, bbox_inches='tight')
+    plt.savefig('figures/Q2B_ridge_coefficients.png', dpi=150, bbox_inches='tight')
     plt.close()
     print_flush("  ✓ figures/Q2B_ridge_coefficients.png")
-    
-    # ---- 图3: 随机森林重要性图 ----
-    fig, ax = plt.subplots(figsize=(10, 12))
-    
-    top20_rf = rf_results[:20]
-    names_rf = [r['variable'] for r in top20_rf][::-1]
-    imps_rf = [r['importance'] for r in top20_rf][::-1]
-    
-    # 按类别着色
-    colors_rf = []
-    for name in names_rf:
-        if '负压' in name:
-            colors_rf.append('#2196F3')
-        elif '温度' in name and '大烟道' not in name:
-            colors_rf.append('#F44336')
-        elif '机速' in name:
-            colors_rf.append('#4CAF50')
-        elif '大烟道' in name:
-            colors_rf.append('#FF9800')
-    
-    ax.barh(range(len(names_rf)), imps_rf, color=colors_rf, alpha=0.8)
+
+    # ---- 图3: 随机森林重要性（Top 20）----
+    fig, ax = plt.subplots(figsize=(9, 10))
+    top20rf   = rf_results[:20]
+    names_rf  = [r['variable'] for r in top20rf][::-1]
+    imps_rf   = [r['importance'] for r in top20rf][::-1]
+    clrs_rf   = []
+    for nm in names_rf:
+        if '负压' in nm:           clrs_rf.append('#2980B9')
+        elif '温度' in nm and '大烟道' not in nm: clrs_rf.append('#C0392B')
+        elif '机速' in nm:         clrs_rf.append('#27AE60')
+        else:                     clrs_rf.append('#E67E22')
+    ax.barh(range(len(names_rf)), imps_rf, color=clrs_rf, height=0.65)
     ax.set_yticks(range(len(names_rf)))
-    ax.set_yticklabels(names_rf, fontsize=10)
-    ax.set_xlabel('特征重要性 (Gain)', fontsize=12)
-    ax.set_title('Top 20: 随机森林特征重要性（非线性）', fontsize=14, fontweight='bold')
-    ax.grid(True, alpha=0.3, axis='x')
-    
-    legend_rf = [
-        Patch(facecolor='#2196F3', alpha=0.8, label='负压'),
-        Patch(facecolor='#F44336', alpha=0.8, label='温度'),
-        Patch(facecolor='#4CAF50', alpha=0.8, label='机速'),
-        Patch(facecolor='#FF9800', alpha=0.8, label='大烟道'),
-    ]
-    ax.legend(handles=legend_rf, fontsize=10, loc='upper right')
-    
+    ax.set_yticklabels(names_rf, fontsize=9)
+    _fp_label(ax)
+    ax.set_xlabel('特征重要性（MDI）', fontproperties=_fp, fontsize=10)
+    ax.set_title('随机森林特征重要性排序（Top 20）', fontproperties=_fp, fontsize=11)
+    ax.grid(axis='x', linestyle='--', alpha=0.35)
+    leg_rf = [Patch(color='#2980B9', label='负压'),
+              Patch(color='#C0392B', label='温度'),
+              Patch(color='#27AE60', label='机速'),
+              Patch(color='#E67E22', label='大烟道')]
+    ax.legend(handles=leg_rf, prop=_fp, fontsize=9, loc='lower right')
     plt.tight_layout()
-    plt.savefig('figures/Q2B_rf_importance.png', dpi=200, bbox_inches='tight')
+    plt.savefig('figures/Q2B_rf_importance.png', dpi=150, bbox_inches='tight')
     plt.close()
     print_flush("  ✓ figures/Q2B_rf_importance.png")
-    
-    # ---- 图4: 四合一总结图 ----
-    fig = plt.figure(figsize=(16, 12))
-    
-    # 子图1: 类别重要性饼图
-    ax1 = fig.add_subplot(2, 2, 1)
-    labels = ['机速', '负压', '温度', '大烟道']
-    sizes = [rf_category['speed'], rf_category['pressure'], 
-             rf_category['temperature'], rf_category['flue']]
-    colors_pie = ['#4CAF50', '#2196F3', '#F44336', '#FF9800']
-    ax1.pie(sizes, labels=labels, colors=colors_pie, autopct='%1.1f%%', 
-            startangle=90, textprops={'fontsize': 12})
-    ax1.set_title('各类别对CO的影响占比', fontsize=14, fontweight='bold')
-    
-    # 子图2: Top 10相关性
-    ax2 = fig.add_subplot(2, 2, 2)
-    top10 = corr_sorted[:10]
-    names_t = [r['variable'] for r in top10][::-1]
-    corrs_t = [r['pearson'] for r in top10][::-1]
-    colors_t = ['#F44336' if c > 0 else '#2196F3' for c in corrs_t]
-    ax2.barh(range(len(names_t)), corrs_t, color=colors_t, alpha=0.8)
-    ax2.set_yticks(range(len(names_t)))
-    ax2.set_yticklabels(names_t, fontsize=10)
-    ax2.set_xlabel('Pearson相关系数')
-    ax2.set_title('Top 10 相关性', fontsize=13, fontweight='bold')
-    ax2.axvline(x=0, color='black', lw=0.5)
-    ax2.grid(True, alpha=0.3, axis='x')
-    
-    # 子图3: Top 10 Ridge系数
-    ax3 = fig.add_subplot(2, 2, 3)
-    top10_r = ridge_results[:10]
-    names_tr = [r['variable'] for r in top10_r][::-1]
-    coeffs_tr = [r['coefficient'] for r in top10_r][::-1]
-    colors_tr = ['#F44336' if c > 0 else '#2196F3' for c in coeffs_tr]
-    ax3.barh(range(len(names_tr)), coeffs_tr, color=colors_tr, alpha=0.8)
-    ax3.set_yticks(range(len(names_tr)))
-    ax3.set_yticklabels(names_tr, fontsize=10)
-    ax3.set_xlabel('Ridge回归系数')
-    ax3.set_title('Top 10 Ridge系数', fontsize=13, fontweight='bold')
-    ax3.axvline(x=0, color='black', lw=0.5)
-    ax3.grid(True, alpha=0.3, axis='x')
-    
-    # 子图4: Top 10 RF重要性
-    ax4 = fig.add_subplot(2, 2, 4)
-    top10_rf = rf_results[:10]
-    names_trf = [r['variable'] for r in top10_rf][::-1]
-    imps_trf = [r['importance'] for r in top10_rf][::-1]
-    ax4.barh(range(len(names_trf)), imps_trf, color='#333333', alpha=0.8)
-    ax4.set_yticks(range(len(names_trf)))
-    ax4.set_yticklabels(names_trf, fontsize=10)
-    ax4.set_xlabel('随机森林重要性')
-    ax4.set_title('Top 10 随机森林重要性', fontsize=13, fontweight='bold')
-    ax4.grid(True, alpha=0.3, axis='x')
-    
-    plt.suptitle('物理影响规律综合分析', fontsize=16, fontweight='bold', y=1.02)
+
+    # ---- 图4: 综合四合一 ----
+    fig, axes4 = plt.subplots(2, 2, figsize=(14, 11))
+
+    # 子图1: 饼图
+    ax1 = axes4[0, 0]
+    pie_labels = ['机速', '负压', '温度', '大烟道']
+    pie_sizes  = [rf_category['speed'], rf_category['pressure'],
+                  rf_category['temperature'], rf_category['flue']]
+    pie_clrs   = ['#27AE60', '#2980B9', '#C0392B', '#E67E22']
+    wedges, texts, autotexts = ax1.pie(
+        pie_sizes, labels=pie_labels, colors=pie_clrs,
+        autopct='%1.1f%%', startangle=90,
+        textprops={'fontsize': 11})
+    for t in texts:    t.set_fontproperties(_fp)
+    for t in autotexts: t.set_fontsize(10)
+    ax1.set_title('各类别特征对CO影响占比', fontproperties=_fp, fontsize=11)
+
+    # 子图2: Top 10 相关性
+    ax2 = axes4[0, 1]
+    top10c = corr_sorted[:10]
+    n2 = [r['variable'] for r in top10c][::-1]
+    c2 = [r['pearson']  for r in top10c][::-1]
+    cl2 = ['#C0392B' if v > 0 else '#2980B9' for v in c2]
+    ax2.barh(range(len(n2)), c2, color=cl2, height=0.6)
+    ax2.set_yticks(range(len(n2))); ax2.set_yticklabels(n2, fontsize=9)
+    _fp_label(ax2)
+    ax2.set_xlabel('Pearson 相关系数', fontproperties=_fp, fontsize=9)
+    ax2.set_title('相关性 Top 10', fontproperties=_fp, fontsize=10)
+    ax2.axvline(0, color='#555', lw=0.8)
+    ax2.grid(axis='x', linestyle='--', alpha=0.35)
+
+    # 子图3: Top 10 Ridge 系数
+    ax3 = axes4[1, 0]
+    top10rr = ridge_results[:10]
+    n3  = [r['variable']    for r in top10rr][::-1]
+    c3  = [r['coefficient'] for r in top10rr][::-1]
+    cl3 = ['#C0392B' if v > 0 else '#2980B9' for v in c3]
+    ax3.barh(range(len(n3)), c3, color=cl3, height=0.6)
+    ax3.set_yticks(range(len(n3))); ax3.set_yticklabels(n3, fontsize=9)
+    _fp_label(ax3)
+    ax3.set_xlabel('Ridge 回归系数', fontproperties=_fp, fontsize=9)
+    ax3.set_title('Ridge 系数 Top 10', fontproperties=_fp, fontsize=10)
+    ax3.axvline(0, color='#555', lw=0.8)
+    ax3.grid(axis='x', linestyle='--', alpha=0.35)
+
+    # 子图4: Top 10 RF 重要性
+    ax4 = axes4[1, 1]
+    top10rrf = rf_results[:10]
+    n4  = [r['variable']   for r in top10rrf][::-1]
+    i4  = [r['importance'] for r in top10rrf][::-1]
+    cl4 = []
+    for nm in n4:
+        if '负压' in nm:                       cl4.append('#2980B9')
+        elif '温度' in nm and '大烟道' not in nm: cl4.append('#C0392B')
+        elif '机速' in nm:                     cl4.append('#27AE60')
+        else:                                 cl4.append('#E67E22')
+    ax4.barh(range(len(n4)), i4, color=cl4, height=0.6)
+    ax4.set_yticks(range(len(n4))); ax4.set_yticklabels(n4, fontsize=9)
+    _fp_label(ax4)
+    ax4.set_xlabel('特征重要性（MDI）', fontproperties=_fp, fontsize=9)
+    ax4.set_title('随机森林重要性 Top 10', fontproperties=_fp, fontsize=10)
+    ax4.grid(axis='x', linestyle='--', alpha=0.35)
+
+    plt.suptitle('物理影响规律综合分析', fontproperties=_fp, fontsize=13, y=1.01)
     plt.tight_layout()
-    plt.savefig('figures/Q2B_summary_4in1.png', dpi=200, bbox_inches='tight')
+    plt.savefig('figures/Q2B_summary_4in1.png', dpi=150, bbox_inches='tight')
     plt.close()
     print_flush("  ✓ figures/Q2B_summary_4in1.png")
 
