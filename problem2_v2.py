@@ -207,12 +207,12 @@ df_al['p_back'] = df_al[back_neg].mean(axis=1) if back_neg else 0.0
 df_al['t_back'] = df_al[back_tmp].mean(axis=1) if back_tmp else 0.0
 stat_cols = ['p_mean', 'p_mid', 'p_back', 't_back']
 
-# (4) CO自回归特征：5个
-df_al['co_lag1']  = df_al[CO_COL].shift(1)
-df_al['co_lag2']  = df_al[CO_COL].shift(2)
-df_al['co_lag5']  = df_al[CO_COL].shift(5)
-df_al['co_ma5']   = df_al[CO_COL].rolling(5).mean()
-df_al['co_diff1'] = df_al[CO_COL].diff(1)
+# (4) CO自回归特征：5个（全部基于历史值，不含当前CO，避免数据泄露）
+df_al['co_lag1']  = df_al[CO_COL].shift(1)           # CO(t-1)
+df_al['co_lag2']  = df_al[CO_COL].shift(2)           # CO(t-2)
+df_al['co_lag5']  = df_al[CO_COL].shift(5)           # CO(t-5)
+df_al['co_ma5']   = df_al[CO_COL].shift(1).rolling(5).mean()  # mean(CO[t-5..t-1])，不含CO(t)
+df_al['co_diff1'] = df_al[CO_COL].shift(1).diff(1)           # CO(t-1)-CO(t-2)，不含CO(t)
 co_ar_cols = ['co_lag1', 'co_lag2', 'co_lag5', 'co_ma5', 'co_diff1']
 
 # 去掉rolling/shift引入的NaN
