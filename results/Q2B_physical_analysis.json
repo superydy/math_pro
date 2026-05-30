@@ -1,0 +1,1498 @@
+{
+  "correlation_analysis": {
+    "all_results": [
+      {
+        "variable": "机速",
+        "pearson": 0.0522,
+        "pearson_pval": 0.01198868405065328,
+        "spearman": 0.0343,
+        "spearman_pval": 0.09850012129220809,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_1",
+        "pearson": -0.1017,
+        "pearson_pval": 9.217611913844842e-07,
+        "spearman": -0.1318,
+        "spearman_pval": 1.8458393009032164e-10,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_1",
+        "pearson": 0.1058,
+        "pearson_pval": 3.264850799265274e-07,
+        "spearman": 0.1626,
+        "spearman_pval": 3.3037365523301923e-15,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_2",
+        "pearson": -0.1128,
+        "pearson_pval": 5.1244402242218304e-08,
+        "spearman": -0.1467,
+        "spearman_pval": 1.2206069588399413e-12,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_2",
+        "pearson": 0.1216,
+        "pearson_pval": 4.230256056198286e-09,
+        "spearman": 0.1579,
+        "spearman_pval": 2.0330143438634617e-14,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_3",
+        "pearson": -0.0065,
+        "pearson_pval": 0.7536603970642907,
+        "spearman": -0.0705,
+        "spearman_pval": 0.0006805303232770848,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "温度_3",
+        "pearson": 0.1687,
+        "pearson_pval": 2.842606261024204e-16,
+        "spearman": 0.1801,
+        "spearman_pval": 2.2636128307173768e-18,
+        "direction": "正相关↑",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_4",
+        "pearson": -0.0058,
+        "pearson_pval": 0.7782505520990519,
+        "spearman": -0.0688,
+        "spearman_pval": 0.0009197608463632202,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "温度_4",
+        "pearson": 0.199,
+        "pearson_pval": 3.7809626126509484e-22,
+        "spearman": 0.2079,
+        "spearman_pval": 4.6207611904190226e-24,
+        "direction": "正相关↑",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_5",
+        "pearson": -0.0058,
+        "pearson_pval": 0.7782505520990519,
+        "spearman": -0.0688,
+        "spearman_pval": 0.0009197608463632202,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "温度_5",
+        "pearson": -0.0085,
+        "pearson_pval": 0.6833312515323925,
+        "spearman": 0.0115,
+        "spearman_pval": 0.579731675812944,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "负压_6",
+        "pearson": -0.2691,
+        "pearson_pval": 8.841045332969307e-40,
+        "spearman": -0.1452,
+        "spearman_pval": 2.0917879255664054e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_6",
+        "pearson": 0.1242,
+        "pearson_pval": 1.923399631440085e-09,
+        "spearman": 0.1716,
+        "spearman_pval": 8.733950328766919e-17,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_7",
+        "pearson": -0.2691,
+        "pearson_pval": 8.841045332969307e-40,
+        "spearman": -0.1452,
+        "spearman_pval": 2.0917879255664054e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_7",
+        "pearson": 0.1617,
+        "pearson_pval": 4.586577968871058e-15,
+        "spearman": 0.205,
+        "spearman_pval": 1.9704823699219377e-23,
+        "direction": "正相关↑",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_8",
+        "pearson": -0.265,
+        "pearson_pval": 1.4096019545135894e-38,
+        "spearman": -0.141,
+        "spearman_pval": 9.038277406072457e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_8",
+        "pearson": 0.1337,
+        "pearson_pval": 1.0183207078156753e-10,
+        "spearman": 0.2031,
+        "spearman_pval": 5.1217173128652595e-23,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_9",
+        "pearson": -0.265,
+        "pearson_pval": 1.4096019545135894e-38,
+        "spearman": -0.141,
+        "spearman_pval": 9.038277406072457e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_9",
+        "pearson": 0.0689,
+        "pearson_pval": 0.0009011400328906654,
+        "spearman": 0.1788,
+        "spearman_pval": 4.0420651981049216e-18,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_10",
+        "pearson": -0.2811,
+        "pearson_pval": 2.1492161196935204e-43,
+        "spearman": -0.1527,
+        "spearman_pval": 1.4322717332143493e-13,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_10",
+        "pearson": 0.0794,
+        "pearson_pval": 0.00012797284068529638,
+        "spearman": 0.2164,
+        "spearman_pval": 5.476553593339294e-26,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_11",
+        "pearson": -0.2811,
+        "pearson_pval": 2.1492161196935204e-43,
+        "spearman": -0.1527,
+        "spearman_pval": 1.4322717332143493e-13,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_11",
+        "pearson": 0.1005,
+        "pearson_pval": 1.2307744725521925e-06,
+        "spearman": 0.1419,
+        "spearman_pval": 6.5141272757545695e-12,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_12",
+        "pearson": -0.2713,
+        "pearson_pval": 1.953189362770197e-40,
+        "spearman": -0.1572,
+        "spearman_pval": 2.5976927181990244e-14,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_12",
+        "pearson": -0.0625,
+        "pearson_pval": 0.0025852608349390765,
+        "spearman": 0.0108,
+        "spearman_pval": 0.6016274271877114,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_13",
+        "pearson": -0.2713,
+        "pearson_pval": 1.953189362770197e-40,
+        "spearman": -0.1572,
+        "spearman_pval": 2.5976927181990244e-14,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_13",
+        "pearson": -0.2115,
+        "pearson_pval": 7.163882629565736e-25,
+        "spearman": -0.2223,
+        "spearman_pval": 2.3357069599240747e-27,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_14",
+        "pearson": -0.2275,
+        "pearson_pval": 1.2953132965398667e-28,
+        "spearman": -0.1826,
+        "spearman_pval": 7.782346362174675e-19,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_14",
+        "pearson": -0.3037,
+        "pearson_pval": 1.0762294804428955e-50,
+        "spearman": -0.3244,
+        "spearman_pval": 5.59083808680685e-58,
+        "direction": "负相关↓",
+        "strength": "强",
+        "significant": true
+      },
+      {
+        "variable": "负压_15",
+        "pearson": -0.2275,
+        "pearson_pval": 1.2953132965398667e-28,
+        "spearman": -0.1826,
+        "spearman_pval": 7.782346362174675e-19,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_15",
+        "pearson": -0.271,
+        "pearson_pval": 2.4553809466738504e-40,
+        "spearman": -0.2177,
+        "spearman_pval": 2.7517640771530637e-26,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_16",
+        "pearson": 0.0524,
+        "pearson_pval": 0.011660516288896236,
+        "spearman": 0.1012,
+        "spearman_pval": 1.02795809111638e-06,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_16",
+        "pearson": -0.2254,
+        "pearson_pval": 4.2108634130567675e-28,
+        "spearman": -0.1064,
+        "spearman_pval": 2.7804533206362825e-07,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_17",
+        "pearson": 0.0563,
+        "pearson_pval": 0.006703164524841401,
+        "spearman": 0.0966,
+        "spearman_pval": 3.11828100704861e-06,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_17",
+        "pearson": -0.1359,
+        "pearson_pval": 4.913124487701188e-11,
+        "spearman": 0.0302,
+        "spearman_pval": 0.14562205242976198,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_18",
+        "pearson": 0.0423,
+        "pearson_pval": 0.04169169433033264,
+        "spearman": 0.0716,
+        "spearman_pval": 0.0005564056751127278,
+        "direction": "正相关↑",
+        "strength": "极弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_18",
+        "pearson": -0.0764,
+        "pearson_pval": 0.00022923658741272367,
+        "spearman": 0.0928,
+        "spearman_pval": 7.617742108347218e-06,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "大烟道负压_1",
+        "pearson": -0.2736,
+        "pearson_pval": 4.0804449307311743e-41,
+        "spearman": -0.144,
+        "spearman_pval": 3.1558256684190724e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "大烟道负压_2",
+        "pearson": -0.2526,
+        "pearson_pval": 4.1720291141859506e-35,
+        "spearman": -0.1399,
+        "spearman_pval": 1.2959009994126685e-11,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "大烟道温度_1",
+        "pearson": -0.2038,
+        "pearson_pval": 3.625614496283805e-23,
+        "spearman": -0.183,
+        "spearman_pval": 6.4510255377385095e-19,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "大烟道温度_2",
+        "pearson": 0.0031,
+        "pearson_pval": 0.8802022671754216,
+        "spearman": -0.0163,
+        "spearman_pval": 0.43366760882052685,
+        "direction": "正相关↑",
+        "strength": "极弱",
+        "significant": false
+      }
+    ],
+    "sorted_by_abs_pearson": [
+      {
+        "variable": "温度_14",
+        "pearson": -0.3037,
+        "pearson_pval": 1.0762294804428955e-50,
+        "spearman": -0.3244,
+        "spearman_pval": 5.59083808680685e-58,
+        "direction": "负相关↓",
+        "strength": "强",
+        "significant": true
+      },
+      {
+        "variable": "负压_10",
+        "pearson": -0.2811,
+        "pearson_pval": 2.1492161196935204e-43,
+        "spearman": -0.1527,
+        "spearman_pval": 1.4322717332143493e-13,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_11",
+        "pearson": -0.2811,
+        "pearson_pval": 2.1492161196935204e-43,
+        "spearman": -0.1527,
+        "spearman_pval": 1.4322717332143493e-13,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "大烟道负压_1",
+        "pearson": -0.2736,
+        "pearson_pval": 4.0804449307311743e-41,
+        "spearman": -0.144,
+        "spearman_pval": 3.1558256684190724e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_12",
+        "pearson": -0.2713,
+        "pearson_pval": 1.953189362770197e-40,
+        "spearman": -0.1572,
+        "spearman_pval": 2.5976927181990244e-14,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_13",
+        "pearson": -0.2713,
+        "pearson_pval": 1.953189362770197e-40,
+        "spearman": -0.1572,
+        "spearman_pval": 2.5976927181990244e-14,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_15",
+        "pearson": -0.271,
+        "pearson_pval": 2.4553809466738504e-40,
+        "spearman": -0.2177,
+        "spearman_pval": 2.7517640771530637e-26,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_6",
+        "pearson": -0.2691,
+        "pearson_pval": 8.841045332969307e-40,
+        "spearman": -0.1452,
+        "spearman_pval": 2.0917879255664054e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_7",
+        "pearson": -0.2691,
+        "pearson_pval": 8.841045332969307e-40,
+        "spearman": -0.1452,
+        "spearman_pval": 2.0917879255664054e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_8",
+        "pearson": -0.265,
+        "pearson_pval": 1.4096019545135894e-38,
+        "spearman": -0.141,
+        "spearman_pval": 9.038277406072457e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_9",
+        "pearson": -0.265,
+        "pearson_pval": 1.4096019545135894e-38,
+        "spearman": -0.141,
+        "spearman_pval": 9.038277406072457e-12,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "大烟道负压_2",
+        "pearson": -0.2526,
+        "pearson_pval": 4.1720291141859506e-35,
+        "spearman": -0.1399,
+        "spearman_pval": 1.2959009994126685e-11,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_14",
+        "pearson": -0.2275,
+        "pearson_pval": 1.2953132965398667e-28,
+        "spearman": -0.1826,
+        "spearman_pval": 7.782346362174675e-19,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "负压_15",
+        "pearson": -0.2275,
+        "pearson_pval": 1.2953132965398667e-28,
+        "spearman": -0.1826,
+        "spearman_pval": 7.782346362174675e-19,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_16",
+        "pearson": -0.2254,
+        "pearson_pval": 4.2108634130567675e-28,
+        "spearman": -0.1064,
+        "spearman_pval": 2.7804533206362825e-07,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_13",
+        "pearson": -0.2115,
+        "pearson_pval": 7.163882629565736e-25,
+        "spearman": -0.2223,
+        "spearman_pval": 2.3357069599240747e-27,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "大烟道温度_1",
+        "pearson": -0.2038,
+        "pearson_pval": 3.625614496283805e-23,
+        "spearman": -0.183,
+        "spearman_pval": 6.4510255377385095e-19,
+        "direction": "负相关↓",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_4",
+        "pearson": 0.199,
+        "pearson_pval": 3.7809626126509484e-22,
+        "spearman": 0.2079,
+        "spearman_pval": 4.6207611904190226e-24,
+        "direction": "正相关↑",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_3",
+        "pearson": 0.1687,
+        "pearson_pval": 2.842606261024204e-16,
+        "spearman": 0.1801,
+        "spearman_pval": 2.2636128307173768e-18,
+        "direction": "正相关↑",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_7",
+        "pearson": 0.1617,
+        "pearson_pval": 4.586577968871058e-15,
+        "spearman": 0.205,
+        "spearman_pval": 1.9704823699219377e-23,
+        "direction": "正相关↑",
+        "strength": "中",
+        "significant": true
+      },
+      {
+        "variable": "温度_17",
+        "pearson": -0.1359,
+        "pearson_pval": 4.913124487701188e-11,
+        "spearman": 0.0302,
+        "spearman_pval": 0.14562205242976198,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_8",
+        "pearson": 0.1337,
+        "pearson_pval": 1.0183207078156753e-10,
+        "spearman": 0.2031,
+        "spearman_pval": 5.1217173128652595e-23,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_6",
+        "pearson": 0.1242,
+        "pearson_pval": 1.923399631440085e-09,
+        "spearman": 0.1716,
+        "spearman_pval": 8.733950328766919e-17,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_2",
+        "pearson": 0.1216,
+        "pearson_pval": 4.230256056198286e-09,
+        "spearman": 0.1579,
+        "spearman_pval": 2.0330143438634617e-14,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_2",
+        "pearson": -0.1128,
+        "pearson_pval": 5.1244402242218304e-08,
+        "spearman": -0.1467,
+        "spearman_pval": 1.2206069588399413e-12,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_1",
+        "pearson": 0.1058,
+        "pearson_pval": 3.264850799265274e-07,
+        "spearman": 0.1626,
+        "spearman_pval": 3.3037365523301923e-15,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_1",
+        "pearson": -0.1017,
+        "pearson_pval": 9.217611913844842e-07,
+        "spearman": -0.1318,
+        "spearman_pval": 1.8458393009032164e-10,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_11",
+        "pearson": 0.1005,
+        "pearson_pval": 1.2307744725521925e-06,
+        "spearman": 0.1419,
+        "spearman_pval": 6.5141272757545695e-12,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_10",
+        "pearson": 0.0794,
+        "pearson_pval": 0.00012797284068529638,
+        "spearman": 0.2164,
+        "spearman_pval": 5.476553593339294e-26,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_18",
+        "pearson": -0.0764,
+        "pearson_pval": 0.00022923658741272367,
+        "spearman": 0.0928,
+        "spearman_pval": 7.617742108347218e-06,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_9",
+        "pearson": 0.0689,
+        "pearson_pval": 0.0009011400328906654,
+        "spearman": 0.1788,
+        "spearman_pval": 4.0420651981049216e-18,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_12",
+        "pearson": -0.0625,
+        "pearson_pval": 0.0025852608349390765,
+        "spearman": 0.0108,
+        "spearman_pval": 0.6016274271877114,
+        "direction": "负相关↓",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_17",
+        "pearson": 0.0563,
+        "pearson_pval": 0.006703164524841401,
+        "spearman": 0.0966,
+        "spearman_pval": 3.11828100704861e-06,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_16",
+        "pearson": 0.0524,
+        "pearson_pval": 0.011660516288896236,
+        "spearman": 0.1012,
+        "spearman_pval": 1.02795809111638e-06,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "机速",
+        "pearson": 0.0522,
+        "pearson_pval": 0.01198868405065328,
+        "spearman": 0.0343,
+        "spearman_pval": 0.09850012129220809,
+        "direction": "正相关↑",
+        "strength": "弱",
+        "significant": true
+      },
+      {
+        "variable": "负压_18",
+        "pearson": 0.0423,
+        "pearson_pval": 0.04169169433033264,
+        "spearman": 0.0716,
+        "spearman_pval": 0.0005564056751127278,
+        "direction": "正相关↑",
+        "strength": "极弱",
+        "significant": true
+      },
+      {
+        "variable": "温度_5",
+        "pearson": -0.0085,
+        "pearson_pval": 0.6833312515323925,
+        "spearman": 0.0115,
+        "spearman_pval": 0.579731675812944,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "负压_3",
+        "pearson": -0.0065,
+        "pearson_pval": 0.7536603970642907,
+        "spearman": -0.0705,
+        "spearman_pval": 0.0006805303232770848,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "负压_4",
+        "pearson": -0.0058,
+        "pearson_pval": 0.7782505520990519,
+        "spearman": -0.0688,
+        "spearman_pval": 0.0009197608463632202,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "负压_5",
+        "pearson": -0.0058,
+        "pearson_pval": 0.7782505520990519,
+        "spearman": -0.0688,
+        "spearman_pval": 0.0009197608463632202,
+        "direction": "负相关↓",
+        "strength": "极弱",
+        "significant": false
+      },
+      {
+        "variable": "大烟道温度_2",
+        "pearson": 0.0031,
+        "pearson_pval": 0.8802022671754216,
+        "spearman": -0.0163,
+        "spearman_pval": 0.43366760882052685,
+        "direction": "正相关↑",
+        "strength": "极弱",
+        "significant": false
+      }
+    ]
+  },
+  "ridge_regression": [
+    {
+      "rank": 1,
+      "variable": "大烟道负压_1",
+      "coefficient": -241.34,
+      "direction": "负向(↓CO)",
+      "relative_strength": 10.0
+    },
+    {
+      "rank": 2,
+      "variable": "大烟道负压_2",
+      "coefficient": 191.48,
+      "direction": "正向(↑CO)",
+      "relative_strength": 7.9
+    },
+    {
+      "rank": 3,
+      "variable": "温度_10",
+      "coefficient": 146.8,
+      "direction": "正向(↑CO)",
+      "relative_strength": 6.1
+    },
+    {
+      "rank": 4,
+      "variable": "温度_9",
+      "coefficient": -138.44,
+      "direction": "负向(↓CO)",
+      "relative_strength": 5.7
+    },
+    {
+      "rank": 5,
+      "variable": "负压_17",
+      "coefficient": 137.25,
+      "direction": "正向(↑CO)",
+      "relative_strength": 5.7
+    },
+    {
+      "rank": 6,
+      "variable": "温度_4",
+      "coefficient": 126.74,
+      "direction": "正向(↑CO)",
+      "relative_strength": 5.2
+    },
+    {
+      "rank": 7,
+      "variable": "负压_7",
+      "coefficient": -89.6,
+      "direction": "负向(↓CO)",
+      "relative_strength": 3.7
+    },
+    {
+      "rank": 8,
+      "variable": "负压_6",
+      "coefficient": -89.6,
+      "direction": "负向(↓CO)",
+      "relative_strength": 3.7
+    },
+    {
+      "rank": 9,
+      "variable": "负压_18",
+      "coefficient": -88.88,
+      "direction": "负向(↓CO)",
+      "relative_strength": 3.7
+    },
+    {
+      "rank": 10,
+      "variable": "温度_12",
+      "coefficient": 79.95,
+      "direction": "正向(↑CO)",
+      "relative_strength": 3.3
+    },
+    {
+      "rank": 11,
+      "variable": "负压_13",
+      "coefficient": -75.22,
+      "direction": "负向(↓CO)",
+      "relative_strength": 3.1
+    },
+    {
+      "rank": 12,
+      "variable": "负压_12",
+      "coefficient": -75.22,
+      "direction": "负向(↓CO)",
+      "relative_strength": 3.1
+    },
+    {
+      "rank": 13,
+      "variable": "温度_16",
+      "coefficient": -72.48,
+      "direction": "负向(↓CO)",
+      "relative_strength": 3.0
+    },
+    {
+      "rank": 14,
+      "variable": "负压_9",
+      "coefficient": 68.93,
+      "direction": "正向(↑CO)",
+      "relative_strength": 2.8
+    },
+    {
+      "rank": 15,
+      "variable": "负压_8",
+      "coefficient": 68.93,
+      "direction": "正向(↑CO)",
+      "relative_strength": 2.8
+    },
+    {
+      "rank": 16,
+      "variable": "负压_2",
+      "coefficient": -65.62,
+      "direction": "负向(↓CO)",
+      "relative_strength": 2.7
+    },
+    {
+      "rank": 17,
+      "variable": "负压_11",
+      "coefficient": 58.91,
+      "direction": "正向(↑CO)",
+      "relative_strength": 2.4
+    },
+    {
+      "rank": 18,
+      "variable": "负压_10",
+      "coefficient": 58.91,
+      "direction": "正向(↑CO)",
+      "relative_strength": 2.4
+    },
+    {
+      "rank": 19,
+      "variable": "温度_14",
+      "coefficient": -54.31,
+      "direction": "负向(↓CO)",
+      "relative_strength": 2.2
+    },
+    {
+      "rank": 20,
+      "variable": "温度_13",
+      "coefficient": -53.8,
+      "direction": "负向(↓CO)",
+      "relative_strength": 2.2
+    },
+    {
+      "rank": 21,
+      "variable": "负压_1",
+      "coefficient": 50.96,
+      "direction": "正向(↑CO)",
+      "relative_strength": 2.1
+    },
+    {
+      "rank": 22,
+      "variable": "温度_11",
+      "coefficient": 40.56,
+      "direction": "正向(↑CO)",
+      "relative_strength": 1.7
+    },
+    {
+      "rank": 23,
+      "variable": "温度_1",
+      "coefficient": 39.82,
+      "direction": "正向(↑CO)",
+      "relative_strength": 1.6
+    },
+    {
+      "rank": 24,
+      "variable": "温度_17",
+      "coefficient": 35.01,
+      "direction": "正向(↑CO)",
+      "relative_strength": 1.4
+    },
+    {
+      "rank": 25,
+      "variable": "温度_8",
+      "coefficient": 33.88,
+      "direction": "正向(↑CO)",
+      "relative_strength": 1.4
+    },
+    {
+      "rank": 26,
+      "variable": "温度_7",
+      "coefficient": 32.36,
+      "direction": "正向(↑CO)",
+      "relative_strength": 1.3
+    },
+    {
+      "rank": 27,
+      "variable": "负压_16",
+      "coefficient": -27.76,
+      "direction": "负向(↓CO)",
+      "relative_strength": 1.1
+    },
+    {
+      "rank": 28,
+      "variable": "机速",
+      "coefficient": 23.84,
+      "direction": "正向(↑CO)",
+      "relative_strength": 1.0
+    },
+    {
+      "rank": 29,
+      "variable": "温度_18",
+      "coefficient": 23.35,
+      "direction": "正向(↑CO)",
+      "relative_strength": 1.0
+    },
+    {
+      "rank": 30,
+      "variable": "温度_3",
+      "coefficient": -22.62,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.9
+    },
+    {
+      "rank": 31,
+      "variable": "大烟道温度_1",
+      "coefficient": -19.9,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.8
+    },
+    {
+      "rank": 32,
+      "variable": "负压_15",
+      "coefficient": -19.67,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.8
+    },
+    {
+      "rank": 33,
+      "variable": "负压_14",
+      "coefficient": -19.67,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.8
+    },
+    {
+      "rank": 34,
+      "variable": "温度_2",
+      "coefficient": -15.25,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.6
+    },
+    {
+      "rank": 35,
+      "variable": "温度_15",
+      "coefficient": -9.57,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.4
+    },
+    {
+      "rank": 36,
+      "variable": "负压_3",
+      "coefficient": -7.75,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.3
+    },
+    {
+      "rank": 37,
+      "variable": "负压_5",
+      "coefficient": 6.36,
+      "direction": "正向(↑CO)",
+      "relative_strength": 0.3
+    },
+    {
+      "rank": 38,
+      "variable": "负压_4",
+      "coefficient": 6.36,
+      "direction": "正向(↑CO)",
+      "relative_strength": 0.3
+    },
+    {
+      "rank": 39,
+      "variable": "大烟道温度_2",
+      "coefficient": -3.66,
+      "direction": "负向(↓CO)",
+      "relative_strength": 0.2
+    },
+    {
+      "rank": 40,
+      "variable": "温度_5",
+      "coefficient": 2.6,
+      "direction": "正向(↑CO)",
+      "relative_strength": 0.1
+    },
+    {
+      "rank": 41,
+      "variable": "温度_6",
+      "coefficient": 1.66,
+      "direction": "正向(↑CO)",
+      "relative_strength": 0.1
+    }
+  ],
+  "random_forest": {
+    "feature_importance": [
+      {
+        "rank": 1,
+        "variable": "温度_14",
+        "importance": 0.086,
+        "relative_pct": 8.6
+      },
+      {
+        "rank": 2,
+        "variable": "温度_10",
+        "importance": 0.0856,
+        "relative_pct": 8.6
+      },
+      {
+        "rank": 3,
+        "variable": "大烟道温度_2",
+        "importance": 0.0753,
+        "relative_pct": 7.5
+      },
+      {
+        "rank": 4,
+        "variable": "温度_15",
+        "importance": 0.0608,
+        "relative_pct": 6.1
+      },
+      {
+        "rank": 5,
+        "variable": "温度_8",
+        "importance": 0.0606,
+        "relative_pct": 6.1
+      },
+      {
+        "rank": 6,
+        "variable": "机速",
+        "importance": 0.0569,
+        "relative_pct": 5.7
+      },
+      {
+        "rank": 7,
+        "variable": "大烟道负压_1",
+        "importance": 0.0335,
+        "relative_pct": 3.3
+      },
+      {
+        "rank": 8,
+        "variable": "温度_18",
+        "importance": 0.0308,
+        "relative_pct": 3.1
+      },
+      {
+        "rank": 9,
+        "variable": "大烟道温度_1",
+        "importance": 0.0308,
+        "relative_pct": 3.1
+      },
+      {
+        "rank": 10,
+        "variable": "温度_5",
+        "importance": 0.03,
+        "relative_pct": 3.0
+      },
+      {
+        "rank": 11,
+        "variable": "温度_2",
+        "importance": 0.0291,
+        "relative_pct": 2.9
+      },
+      {
+        "rank": 12,
+        "variable": "温度_13",
+        "importance": 0.0245,
+        "relative_pct": 2.5
+      },
+      {
+        "rank": 13,
+        "variable": "温度_4",
+        "importance": 0.0244,
+        "relative_pct": 2.4
+      },
+      {
+        "rank": 14,
+        "variable": "负压_14",
+        "importance": 0.0222,
+        "relative_pct": 2.2
+      },
+      {
+        "rank": 15,
+        "variable": "温度_9",
+        "importance": 0.0219,
+        "relative_pct": 2.2
+      },
+      {
+        "rank": 16,
+        "variable": "温度_17",
+        "importance": 0.0212,
+        "relative_pct": 2.1
+      },
+      {
+        "rank": 17,
+        "variable": "负压_7",
+        "importance": 0.0209,
+        "relative_pct": 2.1
+      },
+      {
+        "rank": 18,
+        "variable": "负压_6",
+        "importance": 0.0201,
+        "relative_pct": 2.0
+      },
+      {
+        "rank": 19,
+        "variable": "温度_1",
+        "importance": 0.0199,
+        "relative_pct": 2.0
+      },
+      {
+        "rank": 20,
+        "variable": "负压_15",
+        "importance": 0.0199,
+        "relative_pct": 2.0
+      },
+      {
+        "rank": 21,
+        "variable": "负压_2",
+        "importance": 0.0197,
+        "relative_pct": 2.0
+      },
+      {
+        "rank": 22,
+        "variable": "温度_3",
+        "importance": 0.0193,
+        "relative_pct": 1.9
+      },
+      {
+        "rank": 23,
+        "variable": "温度_16",
+        "importance": 0.0178,
+        "relative_pct": 1.8
+      },
+      {
+        "rank": 24,
+        "variable": "温度_6",
+        "importance": 0.0168,
+        "relative_pct": 1.7
+      },
+      {
+        "rank": 25,
+        "variable": "负压_3",
+        "importance": 0.0162,
+        "relative_pct": 1.6
+      },
+      {
+        "rank": 26,
+        "variable": "温度_7",
+        "importance": 0.0143,
+        "relative_pct": 1.4
+      },
+      {
+        "rank": 27,
+        "variable": "负压_16",
+        "importance": 0.0121,
+        "relative_pct": 1.2
+      },
+      {
+        "rank": 28,
+        "variable": "温度_12",
+        "importance": 0.0119,
+        "relative_pct": 1.2
+      },
+      {
+        "rank": 29,
+        "variable": "大烟道负压_2",
+        "importance": 0.0112,
+        "relative_pct": 1.1
+      },
+      {
+        "rank": 30,
+        "variable": "负压_1",
+        "importance": 0.0103,
+        "relative_pct": 1.0
+      },
+      {
+        "rank": 31,
+        "variable": "温度_11",
+        "importance": 0.01,
+        "relative_pct": 1.0
+      },
+      {
+        "rank": 32,
+        "variable": "负压_18",
+        "importance": 0.009,
+        "relative_pct": 0.9
+      },
+      {
+        "rank": 33,
+        "variable": "负压_17",
+        "importance": 0.0084,
+        "relative_pct": 0.8
+      },
+      {
+        "rank": 34,
+        "variable": "负压_4",
+        "importance": 0.0083,
+        "relative_pct": 0.8
+      },
+      {
+        "rank": 35,
+        "variable": "负压_9",
+        "importance": 0.0083,
+        "relative_pct": 0.8
+      },
+      {
+        "rank": 36,
+        "variable": "负压_5",
+        "importance": 0.0071,
+        "relative_pct": 0.7
+      },
+      {
+        "rank": 37,
+        "variable": "负压_8",
+        "importance": 0.0068,
+        "relative_pct": 0.7
+      },
+      {
+        "rank": 38,
+        "variable": "负压_13",
+        "importance": 0.0067,
+        "relative_pct": 0.7
+      },
+      {
+        "rank": 39,
+        "variable": "负压_12",
+        "importance": 0.0052,
+        "relative_pct": 0.5
+      },
+      {
+        "rank": 40,
+        "variable": "负压_10",
+        "importance": 0.0034,
+        "relative_pct": 0.3
+      },
+      {
+        "rank": 41,
+        "variable": "负压_11",
+        "importance": 0.0027,
+        "relative_pct": 0.3
+      }
+    ],
+    "category_importance": {
+      "speed": 0.0569,
+      "pressure": 0.2521,
+      "temperature": 0.585,
+      "flue": 0.1508
+    }
+  },
+  "pdp_analysis": [
+    {
+      "variable": "温度_14",
+      "direction": "负向(↓CO)",
+      "shape": "非线性",
+      "co_change": -259.9
+    },
+    {
+      "variable": "温度_10",
+      "direction": "正向(↑CO)",
+      "shape": "非线性",
+      "co_change": 181.4
+    },
+    {
+      "variable": "大烟道温度_2",
+      "direction": "无",
+      "shape": "无明显影响",
+      "co_change": 6.0
+    },
+    {
+      "variable": "温度_15",
+      "direction": "负向(↓CO)",
+      "shape": "非线性",
+      "co_change": -81.4
+    },
+    {
+      "variable": "温度_8",
+      "direction": "正向(↑CO)",
+      "shape": "非线性",
+      "co_change": 154.1
+    },
+    {
+      "variable": "机速",
+      "direction": "正向(↑CO)",
+      "shape": "非线性",
+      "co_change": 141.8
+    },
+    {
+      "variable": "大烟道负压_1",
+      "direction": "负向(↓CO)",
+      "shape": "非线性",
+      "co_change": -85.0
+    },
+    {
+      "variable": "温度_18",
+      "direction": "正向(↑CO)",
+      "shape": "近似线性",
+      "co_change": 30.2
+    },
+    {
+      "variable": "大烟道温度_1",
+      "direction": "负向(↓CO)",
+      "shape": "近似线性",
+      "co_change": -57.1
+    }
+  ],
+  "zone_analysis": {
+    "前段(1-6#)": {
+      "pressure_corr": -0.1317,
+      "temp_corr": 0.1118,
+      "pressure_strength": "弱",
+      "temp_strength": "弱",
+      "pressure_direction": "↓",
+      "temp_direction": "↑"
+    },
+    "中段(7-12#)": {
+      "pressure_corr": -0.2919,
+      "temp_corr": 0.0197,
+      "pressure_strength": "中",
+      "temp_strength": "弱",
+      "pressure_direction": "↓",
+      "temp_direction": "↑"
+    },
+    "后段(13-18#)": {
+      "pressure_corr": -0.057,
+      "temp_corr": -0.3094,
+      "pressure_strength": "弱",
+      "temp_strength": "强",
+      "pressure_direction": "↓",
+      "temp_direction": "↓"
+    }
+  },
+  "time_lag_results": {
+    "机速": 60,
+    "负压_1": 1,
+    "温度_1": 18,
+    "负压_2": 1,
+    "温度_2": 17,
+    "负压_3": -4,
+    "温度_3": 15,
+    "负压_4": -4,
+    "温度_4": 13,
+    "负压_5": -4,
+    "温度_5": -36,
+    "负压_6": 0,
+    "温度_6": 13,
+    "负压_7": 0,
+    "温度_7": 9,
+    "负压_8": 0,
+    "温度_8": 8,
+    "负压_9": 0,
+    "温度_9": 20,
+    "负压_10": 1,
+    "温度_10": 21,
+    "负压_11": 1,
+    "温度_11": -45,
+    "负压_12": 1,
+    "温度_12": 2,
+    "负压_13": 1,
+    "温度_13": 1,
+    "负压_14": 1,
+    "温度_14": 0,
+    "负压_15": 1,
+    "温度_15": -1,
+    "负压_16": 58,
+    "温度_16": -1,
+    "负压_17": 58,
+    "温度_17": -1,
+    "负压_18": 58,
+    "温度_18": -2,
+    "大烟道负压_1": 0,
+    "大烟道负压_2": 0,
+    "大烟道温度_1": 0,
+    "大烟道温度_2": 3
+  }
+}
