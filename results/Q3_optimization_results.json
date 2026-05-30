@@ -1,338 +1,154 @@
 {
-  "optimization_summary": {
-    "baseline_co_mg_m3": 3479.9,
-    "optimal_co_mg_m3": 2908.99,
-    "reduction_mg_m3": 570.91,
-    "reduction_pct": 16.41
+  "current_co": 3495.3583984375,
+  "baseline_pso": {
+    "co": 2741.8367641457803,
+    "reduction_pct": 21.55777887121847,
+    "meets_standard": true
   },
-  "pso_config": {
-    "n_particles": 30,
-    "n_iterations": 50,
-    "convergence_history": [
-      3462.329345703125,
-      3422.3251953125,
-      3419.270263671875,
-      3419.270263671875,
-      3419.270263671875,
-      2915.164794921875,
-      2915.164794921875,
-      2915.164794921875,
-      2915.164794921875,
-      2915.164794921875,
-      2915.164794921875,
-      2915.164794921875,
-      2914.8076171875,
-      2914.8076171875,
-      2913.5791015625,
-      2913.5791015625,
-      2913.5791015625,
-      2913.5791015625,
-      2913.5791015625,
-      2913.5791015625,
-      2913.5791015625,
-      2912.4794921875,
-      2910.216796875,
-      2910.216796875,
-      2910.216796875,
-      2910.216796875,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625,
-      2908.98681640625
+  "improved_pso": {
+    "co": 2876.776795824196,
+    "reduction_pct": 17.697229642883634,
+    "meets_standard": false,
+    "method": "reliability_penalty + adaptive_pso",
+    "penalty_type": "exponential_decay",
+    "alpha_range": [
+      50,
+      500
+    ],
+    "bound_percentile": "10%-90%"
+  },
+  "optimal_pressures_improved": {
+    "bellows_1": -11.186829412766931,
+    "bellows_2": -11.906510213469561,
+    "bellows_3": -11.199840438828865,
+    "bellows_4": -11.548,
+    "bellows_5": -11.458936322972695,
+    "bellows_6": -14.556174446576875,
+    "bellows_7": -14.325020030546858,
+    "bellows_8": -13.984603271464675,
+    "bellows_9": -14.35875744590404,
+    "bellows_10": -13.878207200780201,
+    "bellows_11": -14.193286749924711,
+    "bellows_12": -14.139773156839974,
+    "bellows_13": -13.966350607837402,
+    "bellows_14": -14.290302585552759,
+    "bellows_15": -13.75845928937055,
+    "bellows_16": -10.941805772836975,
+    "bellows_17": -9.458749407297962,
+    "bellows_18": -8.892246798882102
+  },
+  "optimal_pressures_baseline": {
+    "bellows_1": -10.976,
+    "bellows_2": -12.079728500354616,
+    "bellows_3": -11.454717062733101,
+    "bellows_4": -11.129465240173257,
+    "bellows_5": -11.548,
+    "bellows_6": -14.621799999999999,
+    "bellows_7": -14.403808310822598,
+    "bellows_8": -14.209530493744602,
+    "bellows_9": -14.656,
+    "bellows_10": -14.529823358848288,
+    "bellows_11": -13.767534677771406,
+    "bellows_12": -13.697411835103319,
+    "bellows_13": -13.90309998382459,
+    "bellows_14": -14.337936544183298,
+    "bellows_15": -13.608627697188822,
+    "bellows_16": -13.46083045785891,
+    "bellows_17": -7.685951800828864,
+    "bellows_18": -6.470600000000001
+  },
+  "current_pressures": {
+    "bellows_1": -11.425,
+    "bellows_2": -11.687,
+    "bellows_3": -11.232,
+    "bellows_4": -11.325,
+    "bellows_5": -11.325,
+    "bellows_6": -14.252,
+    "bellows_7": -14.252,
+    "bellows_8": -14.281,
+    "bellows_9": -14.281,
+    "bellows_10": -14.195,
+    "bellows_11": -14.195,
+    "bellows_12": -14.17,
+    "bellows_13": -14.17,
+    "bellows_14": -13.99,
+    "bellows_15": -13.99,
+    "bellows_16": -13.609,
+    "bellows_17": -13.398,
+    "bellows_18": -11.142
+  },
+  "pressure_ranges": {
+    "bellows_1": [
+      -11.890600000000001,
+      -10.976
+    ],
+    "bellows_2": [
+      -12.0936,
+      -11.286
+    ],
+    "bellows_3": [
+      -11.455,
+      -10.9384
+    ],
+    "bellows_4": [
+      -11.548,
+      -11.0532
+    ],
+    "bellows_5": [
+      -11.548,
+      -11.0532
+    ],
+    "bellows_6": [
+      -14.621799999999999,
+      -13.7884
+    ],
+    "bellows_7": [
+      -14.621799999999999,
+      -13.7884
+    ],
+    "bellows_8": [
+      -14.656,
+      -13.81
+    ],
+    "bellows_9": [
+      -14.656,
+      -13.81
+    ],
+    "bellows_10": [
+      -14.562,
+      -13.717
+    ],
+    "bellows_11": [
+      -14.562,
+      -13.717
+    ],
+    "bellows_12": [
+      -14.5416,
+      -13.683399999999999
+    ],
+    "bellows_13": [
+      -14.5416,
+      -13.683399999999999
+    ],
+    "bellows_14": [
+      -14.369,
+      -13.345
+    ],
+    "bellows_15": [
+      -14.369,
+      -13.345
+    ],
+    "bellows_16": [
+      -14.161200000000001,
+      -8.8978
+    ],
+    "bellows_17": [
+      -13.958,
+      -7.638000000000001
+    ],
+    "bellows_18": [
+      -11.4616,
+      -6.470600000000001
     ]
-  },
-  "pressure_ranges_and_decision": {
-    "负压_1": {
-      "lower_bound": -12.06,
-      "median": -11.43,
-      "upper_bound": -10.82,
-      "optimal": -11.15,
-      "adjustment": 0.28
-    },
-    "负压_2": {
-      "lower_bound": -12.22,
-      "median": -11.69,
-      "upper_bound": -11.16,
-      "optimal": -11.69,
-      "adjustment": -0.0
-    },
-    "负压_3": {
-      "lower_bound": -11.51,
-      "median": -11.23,
-      "upper_bound": -10.78,
-      "optimal": -10.98,
-      "adjustment": 0.25
-    },
-    "负压_4": {
-      "lower_bound": -11.6,
-      "median": -11.32,
-      "upper_bound": -10.89,
-      "optimal": -10.99,
-      "adjustment": 0.34
-    },
-    "负压_5": {
-      "lower_bound": -11.6,
-      "median": -11.32,
-      "upper_bound": -10.89,
-      "optimal": -11.54,
-      "adjustment": -0.21
-    },
-    "负压_6": {
-      "lower_bound": -14.89,
-      "median": -14.25,
-      "upper_bound": -13.66,
-      "optimal": -13.66,
-      "adjustment": 0.59
-    },
-    "负压_7": {
-      "lower_bound": -14.89,
-      "median": -14.25,
-      "upper_bound": -13.66,
-      "optimal": -14.38,
-      "adjustment": -0.12
-    },
-    "负压_8": {
-      "lower_bound": -14.92,
-      "median": -14.28,
-      "upper_bound": -13.69,
-      "optimal": -13.69,
-      "adjustment": 0.59
-    },
-    "负压_9": {
-      "lower_bound": -14.92,
-      "median": -14.28,
-      "upper_bound": -13.69,
-      "optimal": -14.29,
-      "adjustment": -0.01
-    },
-    "负压_10": {
-      "lower_bound": -14.83,
-      "median": -14.2,
-      "upper_bound": -13.6,
-      "optimal": -13.6,
-      "adjustment": 0.6
-    },
-    "负压_11": {
-      "lower_bound": -14.83,
-      "median": -14.2,
-      "upper_bound": -13.6,
-      "optimal": -14.33,
-      "adjustment": -0.14
-    },
-    "负压_12": {
-      "lower_bound": -14.81,
-      "median": -14.17,
-      "upper_bound": -13.56,
-      "optimal": -14.72,
-      "adjustment": -0.55
-    },
-    "负压_13": {
-      "lower_bound": -14.81,
-      "median": -14.17,
-      "upper_bound": -13.56,
-      "optimal": -13.92,
-      "adjustment": 0.25
-    },
-    "负压_14": {
-      "lower_bound": -14.63,
-      "median": -13.99,
-      "upper_bound": -9.88,
-      "optimal": -14.63,
-      "adjustment": -0.64
-    },
-    "负压_15": {
-      "lower_bound": -14.63,
-      "median": -13.99,
-      "upper_bound": -9.88,
-      "optimal": -12.86,
-      "adjustment": 1.13
-    },
-    "负压_16": {
-      "lower_bound": -14.36,
-      "median": -13.61,
-      "upper_bound": -7.59,
-      "optimal": -9.4,
-      "adjustment": 4.21
-    },
-    "负压_17": {
-      "lower_bound": -14.15,
-      "median": -13.4,
-      "upper_bound": -6.39,
-      "optimal": -7.55,
-      "adjustment": 5.85
-    },
-    "负压_18": {
-      "lower_bound": -11.52,
-      "median": -11.14,
-      "upper_bound": -5.34,
-      "optimal": -7.08,
-      "adjustment": 4.06
-    }
-  },
-  "sensitivity_ranking": [
-    {
-      "rank": 1,
-      "variable": "负压_6",
-      "co_range_mg_m3": 1034.61,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -13.66
-    },
-    {
-      "rank": 2,
-      "variable": "负压_10",
-      "co_range_mg_m3": 510.08,
-      "direction": "正向（增压→CO升）",
-      "slope": 27.5587,
-      "optimal_value": -13.6
-    },
-    {
-      "rank": 3,
-      "variable": "负压_3",
-      "co_range_mg_m3": 509.09,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -10.98
-    },
-    {
-      "rank": 4,
-      "variable": "负压_4",
-      "co_range_mg_m3": 509.09,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -10.99
-    },
-    {
-      "rank": 5,
-      "variable": "负压_12",
-      "co_range_mg_m3": 382.06,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -14.72
-    },
-    {
-      "rank": 6,
-      "variable": "负压_11",
-      "co_range_mg_m3": 381.58,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -14.33
-    },
-    {
-      "rank": 7,
-      "variable": "负压_2",
-      "co_range_mg_m3": 153.61,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -11.69
-    },
-    {
-      "rank": 8,
-      "variable": "负压_8",
-      "co_range_mg_m3": 153.13,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -13.69
-    },
-    {
-      "rank": 9,
-      "variable": "负压_9",
-      "co_range_mg_m3": 152.53,
-      "direction": "正向（增压→CO升）",
-      "slope": 27.0001,
-      "optimal_value": -14.29
-    },
-    {
-      "rank": 10,
-      "variable": "负压_17",
-      "co_range_mg_m3": 151.47,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -7.55
-    },
-    {
-      "rank": 11,
-      "variable": "负压_13",
-      "co_range_mg_m3": 150.3,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -13.92
-    },
-    {
-      "rank": 12,
-      "variable": "负压_14",
-      "co_range_mg_m3": 148.85,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -14.63
-    },
-    {
-      "rank": 13,
-      "variable": "负压_18",
-      "co_range_mg_m3": 148.02,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -7.08
-    },
-    {
-      "rank": 14,
-      "variable": "负压_7",
-      "co_range_mg_m3": 148.0,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -14.38
-    },
-    {
-      "rank": 15,
-      "variable": "负压_5",
-      "co_range_mg_m3": 5.38,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -11.54
-    },
-    {
-      "rank": 16,
-      "variable": "负压_1",
-      "co_range_mg_m3": 5.14,
-      "direction": "负向（增压→CO降）",
-      "slope": -6.3491,
-      "optimal_value": -11.15
-    },
-    {
-      "rank": 17,
-      "variable": "负压_16",
-      "co_range_mg_m3": 2.85,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -9.4
-    },
-    {
-      "rank": 18,
-      "variable": "负压_15",
-      "co_range_mg_m3": 0.0,
-      "direction": "负向（增压→CO降）",
-      "slope": 0.0,
-      "optimal_value": -12.86
-    }
-  ]
+  }
 }
