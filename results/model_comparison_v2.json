@@ -3,25 +3,31 @@
     "r2": 0.87,
     "rmse": 161.03,
     "mae": 65.41,
-    "time": 3.38
+    "time": 3.27
   },
   "LightGBM": {
     "r2": 0.9012,
     "rmse": 140.35,
     "mae": 60.9,
-    "time": 0.56
+    "time": 0.45
   },
   "CatBoost": {
     "r2": 0.884,
     "rmse": 152.1,
     "mae": 71.02,
-    "time": 0.92
+    "time": 0.86
+  },
+  "XGBoost(默认)": {
+    "r2": 0.8814,
+    "rmse": 153.82,
+    "mae": 63.45,
+    "time": 0.88
   },
   "XGBoost+PSO(本文)": {
     "r2": 0.9337,
     "rmse": 115.03,
     "mae": 51.09,
-    "time": 0.18,
+    "time": 0.23,
     "best_params": {
       "learning_rate": 0.04517100648863848,
       "max_depth": 3,

@@ -155,8 +155,8 @@ def gen_comparison_figure(results):
     r2s    = [v['r2']   for v in results.values()]
     rmses  = [v['rmse'] for v in results.values()]
     maes   = [v['mae']  for v in results.values()]
-    # 颜色：RF灰蓝、LightGBM绿、CatBoost橙、XGBoost+PSO深红
-    colors = ['#92C5DE', '#4DAF4A', '#F4A582', '#D6604D']
+    # 颜色：RF灰蓝、LightGBM绿、CatBoost橙、XGBoost默认浅红、XGBoost+PSO深红
+    colors = ['#92C5DE', '#4DAF4A', '#F4A582', '#F4A0A0', '#D6604D']
 
     x = np.arange(len(names))
     fig, axes = plt.subplots(1, 3, figsize=(15, 5.5))
@@ -213,9 +213,8 @@ def main():
 
     results = {}
 
-    # 1. 线性回归
     # 1. 随机森林
-    print("\n[1/4] 随机森林 (n=200)...")
+    print("\n[1/5] 随机森林 (n=200)...")
     t = time.time()
     mdl = RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1)
     mdl.fit(X_tr, y_tr)
@@ -225,7 +224,7 @@ def main():
     print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
 
     # 2. LightGBM
-    print("\n[2/4] LightGBM (默认)...")
+    print("\n[2/5] LightGBM (默认)...")
     t = time.time()
     mdl = lgb.LGBMRegressor(n_estimators=200, random_state=42, n_jobs=-1, verbose=-1)
     mdl.fit(X_tr_s, y_tr)
@@ -235,7 +234,7 @@ def main():
     print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
 
     # 3. CatBoost
-    print("\n[3/4] CatBoost (默认)...")
+    print("\n[3/5] CatBoost (默认)...")
     t = time.time()
     mdl = CatBoostRegressor(n_estimators=200, random_seed=42,
                              verbose=False, thread_count=-1)
@@ -243,10 +242,20 @@ def main():
     pred = mdl.predict(X_te_s)
     r2, rmse, mae = metrics(y_te, pred)
     results['CatBoost'] = {'r2':r2,'rmse':rmse,'mae':mae,'time':round(time.time()-t,2)}
+
+    # 4. XGBoost（默认，无PSO）
+    print("\n[4/5] XGBoost (默认参数，无PSO)...")
+    t = time.time()
+    mdl = XGBRegressor(n_estimators=200, random_state=42, n_jobs=-1, verbosity=0)
+    mdl.fit(X_tr_s, y_tr, verbose=False)
+    pred = mdl.predict(X_te_s)
+    r2, rmse, mae = metrics(y_te, pred)
+    results['XGBoost(默认)'] = {'r2':r2,'rmse':rmse,'mae':mae,'time':round(time.time()-t,2)}
+    print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
     print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
 
-    # 4. XGBoost + PSO（本文）
-    print("\n[4/4] XGBoost + PSO（本文）...")
+    # 5. XGBoost + PSO（本文）
+    print("\n[5/5] XGBoost + PSO（本文）...")
     best_params, pso_cv_r2 = run_pso(X_tr_s, y_tr)
     t = time.time()
     mdl = XGBRegressor(**best_params, random_state=42, n_jobs=-1, verbosity=0)
