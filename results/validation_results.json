@@ -1,0 +1,329 @@
+{
+  "ablation": [
+    {
+      "name": "全特征（基准）",
+      "removed": "—",
+      "n_feats": 84,
+      "r2": 0.9337,
+      "mae": 51.09,
+      "rmse": 115.03,
+      "r2_drop": 0.0
+    },
+    {
+      "name": "移除梯度特征",
+      "removed": "-34个梯度特征",
+      "n_feats": 50,
+      "r2": 0.9332,
+      "mae": 49.12,
+      "rmse": 115.4,
+      "r2_drop": 0.0005
+    },
+    {
+      "name": "移除统计聚合特征",
+      "removed": "-4个统计特征",
+      "n_feats": 80,
+      "r2": 0.9344,
+      "mae": 51.21,
+      "rmse": 114.4,
+      "r2_drop": -0.0007
+    },
+    {
+      "name": "移除CO自回归特征",
+      "removed": "-5个CO滞后特征",
+      "n_feats": 79,
+      "r2": 0.1242,
+      "mae": 295.75,
+      "rmse": 417.95,
+      "r2_drop": 0.8095
+    },
+    {
+      "name": "仅物理传感器特征",
+      "removed": "仅41个物理特征",
+      "n_feats": 41,
+      "r2": 0.1591,
+      "mae": 288.32,
+      "rmse": 409.52,
+      "r2_drop": 0.7746
+    }
+  ],
+  "sensitivity": {
+    "co_ref": 3495.3583984375,
+    "co_baseline": 3494.72,
+    "co_opt_pred": 3487.41,
+    "feasibility": [
+      {
+        "bellows": 1,
+        "p_opt": -11.2284,
+        "lb": -11.8906,
+        "ub": -10.976,
+        "feasible": true
+      },
+      {
+        "bellows": 2,
+        "p_opt": -11.7869,
+        "lb": -12.0936,
+        "ub": -11.286,
+        "feasible": true
+      },
+      {
+        "bellows": 3,
+        "p_opt": -11.1787,
+        "lb": -11.455,
+        "ub": -10.9384,
+        "feasible": true
+      },
+      {
+        "bellows": 4,
+        "p_opt": -11.416,
+        "lb": -11.548,
+        "ub": -11.0532,
+        "feasible": true
+      },
+      {
+        "bellows": 5,
+        "p_opt": -11.4216,
+        "lb": -11.548,
+        "ub": -11.0532,
+        "feasible": true
+      },
+      {
+        "bellows": 6,
+        "p_opt": -14.6218,
+        "lb": -14.6218,
+        "ub": -13.7884,
+        "feasible": true
+      },
+      {
+        "bellows": 7,
+        "p_opt": -14.1509,
+        "lb": -14.6218,
+        "ub": -13.7884,
+        "feasible": true
+      },
+      {
+        "bellows": 8,
+        "p_opt": -14.0533,
+        "lb": -14.656,
+        "ub": -13.81,
+        "feasible": true
+      },
+      {
+        "bellows": 9,
+        "p_opt": -14.2016,
+        "lb": -14.656,
+        "ub": -13.81,
+        "feasible": true
+      },
+      {
+        "bellows": 10,
+        "p_opt": -13.9254,
+        "lb": -14.562,
+        "ub": -13.717,
+        "feasible": true
+      },
+      {
+        "bellows": 11,
+        "p_opt": -14.2028,
+        "lb": -14.562,
+        "ub": -13.717,
+        "feasible": true
+      },
+      {
+        "bellows": 12,
+        "p_opt": -14.1025,
+        "lb": -14.5416,
+        "ub": -13.6834,
+        "feasible": true
+      },
+      {
+        "bellows": 13,
+        "p_opt": -14.2258,
+        "lb": -14.5416,
+        "ub": -13.6834,
+        "feasible": true
+      },
+      {
+        "bellows": 14,
+        "p_opt": -13.6566,
+        "lb": -14.369,
+        "ub": -13.345,
+        "feasible": true
+      },
+      {
+        "bellows": 15,
+        "p_opt": -13.5876,
+        "lb": -14.369,
+        "ub": -13.345,
+        "feasible": true
+      },
+      {
+        "bellows": 16,
+        "p_opt": -10.9655,
+        "lb": -14.1612,
+        "ub": -8.8978,
+        "feasible": true
+      },
+      {
+        "bellows": 17,
+        "p_opt": -10.7873,
+        "lb": -13.958,
+        "ub": -7.638,
+        "feasible": true
+      },
+      {
+        "bellows": 18,
+        "p_opt": -9.3514,
+        "lb": -11.4616,
+        "ub": -6.4706,
+        "feasible": true
+      }
+    ],
+    "all_feasible": true,
+    "scan_results": [
+      {
+        "bellows": 1,
+        "co_range": 10.45,
+        "sensitivity": 11.426,
+        "co_min": 3482.26,
+        "co_max": 3492.71,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 2,
+        "co_range": 10.95,
+        "sensitivity": 13.559,
+        "co_min": 3479.11,
+        "co_max": 3490.06,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 3,
+        "co_range": 4.9,
+        "sensitivity": 9.485,
+        "co_min": 3482.51,
+        "co_max": 3487.41,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 4,
+        "co_range": 7.98,
+        "sensitivity": 16.128,
+        "co_min": 3487.41,
+        "co_max": 3495.39,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 5,
+        "co_range": 0.44,
+        "sensitivity": 0.889,
+        "co_min": 3486.97,
+        "co_max": 3487.41,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 6,
+        "co_range": 5.89,
+        "sensitivity": 7.067,
+        "co_min": 3487.36,
+        "co_max": 3493.25,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 7,
+        "co_range": 39.38,
+        "sensitivity": 47.252,
+        "co_min": 3452.85,
+        "co_max": 3492.23,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 8,
+        "co_range": 39.38,
+        "sensitivity": 46.548,
+        "co_min": 3452.85,
+        "co_max": 3492.23,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 9,
+        "co_range": 5.38,
+        "sensitivity": 6.359,
+        "co_min": 3487.41,
+        "co_max": 3492.79,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 10,
+        "co_range": 5.38,
+        "sensitivity": 6.367,
+        "co_min": 3487.41,
+        "co_max": 3492.79,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 11,
+        "co_range": 5.67,
+        "sensitivity": 6.71,
+        "co_min": 3482.6,
+        "co_max": 3488.27,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 12,
+        "co_range": 5.72,
+        "sensitivity": 6.665,
+        "co_min": 3482.6,
+        "co_max": 3488.32,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 13,
+        "co_range": 3.66,
+        "sensitivity": 4.265,
+        "co_min": 3487.41,
+        "co_max": 3491.07,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 14,
+        "co_range": 3.66,
+        "sensitivity": 3.574,
+        "co_min": 3487.41,
+        "co_max": 3491.07,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 15,
+        "co_range": 2.93,
+        "sensitivity": 2.861,
+        "co_min": 3486.99,
+        "co_max": 3489.92,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 16,
+        "co_range": 8.47,
+        "sensitivity": 1.609,
+        "co_min": 3483.32,
+        "co_max": 3491.79,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 17,
+        "co_range": 6.82,
+        "sensitivity": 1.079,
+        "co_min": 3484.01,
+        "co_max": 3490.83,
+        "co_at_optimal": 3487.41
+      },
+      {
+        "bellows": 18,
+        "co_range": 1.56,
+        "sensitivity": 0.313,
+        "co_min": 3487.41,
+        "co_max": 3488.97,
+        "co_at_optimal": 3487.41
+      }
+    ]
+  }
+}

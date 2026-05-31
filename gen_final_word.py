@@ -19,6 +19,8 @@ with open('results/Q3_optimization_results.json','r',encoding='utf-8') as f:
     q3 = json.load(f)
 with open('results/final_metrics.json','r',encoding='utf-8') as f:
     fm = json.load(f)
+with open('results/validation_results.json','r',encoding='utf-8') as f:
+    val = json.load(f)
 
 cmp      = comp['model_comparison']
 pso_log  = comp['pso_iteration_log']
@@ -366,6 +368,34 @@ def build():
     fig(doc,f'{FIG}/fig4_6_importance.png',14,
         '图4-9  XGBoost+PSO模型Top-20特征重要性排名与类别汇总')
 
+    head(doc,'4.5.5  消融实验验证',3)
+    abl = val['ablation']
+    base_r2 = abl[0]['r2']
+    body(doc,
+        f'为定量验证各特征组对模型性能的贡献，本文在全特征基础（R²={base_r2:.4f}）上'
+        f'逐步移除不同特征组，使用相同的PSO最优超参数重新训练，记录性能变化。'
+        f'消融实验共设计5个对比组，如表4-7所示。')
+    fig(doc,f'{FIG}/fig_val_A_ablation.png',15,
+        '图4-10  特征组消融实验结果：(a) R²对比 (b) MAE/RMSE对比')
+    abl_rows = []
+    for r in abl:
+        drop_str = f'−{r["r2_drop"]:.4f}' if r['r2_drop'] > 0 else '基准'
+        abl_rows.append([r['name'], str(r['n_feats']),
+                          f'{r["r2"]:.4f}', f'{r["mae"]:.2f}', f'{r["rmse"]:.2f}', drop_str])
+    tbl(doc,
+        ['实验组','特征数','R²','MAE (ppm)','RMSE (ppm)','R²降幅'],
+        abl_rows,
+        caption_text='表4-7  特征组消融实验结果（使用PSO最优超参数，70/30测试集）')
+    co_drop = next(r for r in abl if '自回归' in r['name'])
+    body(doc,
+        f'消融实验结论：① CO自回归特征是最关键的特征组，移除后R²从{base_r2:.4f}'
+        f'骤降至{co_drop["r2"]:.4f}（降幅{co_drop["r2_drop"]:.4f}），'
+        f'MAE增大至{co_drop["mae"]:.0f} ppm（↑{co_drop["mae"]-abl[0]["mae"]:.0f} ppm），'
+        f'说明CO浓度的时序自相关性是短期预测的核心信息来源；'
+        f'② 梯度特征和统计聚合特征的独立贡献相对有限，但有助于捕捉沿炉方向的工艺梯度；'
+        f'③ 仅用物理传感器特征时R²仅{next(r for r in abl if "仅物理" in r["name"])["r2"]:.4f}，'
+        f'远低于完整模型，验证了多类特征融合的必要性。')
+
     # 4.6
     head(doc,'4.6  结果预测',2)
     head(doc,'4.6.1  测试集预测结果',3)
@@ -471,13 +501,48 @@ def build():
         p_rows,
         caption_text='表5-2  18个风箱负压最优配置方案（真实PSO优化结果）')
 
-    head(doc,'5.5  敏感性分析',2)
-    fig(doc,f'{FIG}/fig5_2_sensitivity.png',14,
-        '图5-2  各风箱负压敏感性分析（左：Top10排名；右：典型后段风箱CO-压力响应曲线）')
+    head(doc,'5.5  优化结果验证',2)
+    head(doc,'5.5.1  约束可行性验证',3)
+    sens = val['sensitivity']
+    feas = sens['feasibility']
+    all_ok = sens['all_feasible']
     body(doc,
-        '敏感性分析表明后段风箱（16#、17#、18#）对稳态CO的影响最大，'
-        '调节范围宽（5~6 Pa）且烧结层残碳浓度高，是实际操作中优先调控的对象。'
-        '前段（1#–5#）调节范围窄（<1 Pa），敏感性低，调控空间有限。')
+        f'验证PSO所求最优压力向量 P*=[P₁*,…,P₁₈*]ᵀ 是否满足全部约束。'
+        f'对比每个风箱最优压力与其允许范围[Q₁₀,Q₉₀]，结果如图5-2(c)及表5-3所示。'
+        f'{"全部18个风箱均满足约束，可行性验证通过（✓）。" if all_ok else "存在违约风箱，需重新优化。"}')
+    fig(doc,f'{FIG}/fig_val_D_sensitivity.png',15,
+        '图5-2  Q3验证：(c) 最优压力约束可行性（18风箱全部在允许范围内）(d) 全风箱灵敏度排名')
+    # 可行性摘要表（取18行中代表性9行：奇数编号）
+    feas_rows = []
+    for r in feas:
+        ok_str = '✓' if r['feasible'] else '✗'
+        feas_rows.append([f'{r["bellows"]}#',
+                          f'{r["lb"]:.4f}', f'{r["p_opt"]:.4f}', f'{r["ub"]:.4f}', ok_str])
+    tbl(doc,
+        ['风箱','下限 Q₁₀','最优压力 P*','上限 Q₉₀','可行性'],
+        feas_rows,
+        caption_text=f'表5-3  18个风箱最优压力约束可行性验证（全部{"✓" if all_ok else "含✗"}）')
+
+    head(doc,'5.5.2  风箱灵敏度排名',3)
+    scan = sens['scan_results']
+    scan_sorted = sorted(scan, key=lambda x: -x['co_range'])
+    top5 = scan_sorted[:5]
+    top5_str = '、'.join([f'风箱{r["bellows"]}（ΔCO={r["co_range"]:.1f} ppm）' for r in top5])
+    body(doc,
+        f'对全部18个风箱在其允许范围内均匀扫描11个压力点（固定其他变量），'
+        f'记录模型CO预测的变化幅度（ΔCO）作为灵敏度指标，结果如图5-2(d)所示。'
+        f'灵敏度最高的前5个风箱为：{top5_str}，'
+        f'说明中段风箱（7#、8#）处于烧结燃烧最活跃区域，压力调节对CO释放影响最显著，'
+        f'是现场操作员重点监控和优先调控的对象。')
+    scan_rows = []
+    for r in scan_sorted[:10]:
+        scan_rows.append([f'{r["bellows"]}#',
+                          f'{r["co_min"]:.1f}', f'{r["co_max"]:.1f}',
+                          f'{r["co_range"]:.2f}', f'{r["sensitivity"]:.3f}'])
+    tbl(doc,
+        ['风箱','CO最小预测(ppm)','CO最大预测(ppm)','ΔCO范围(ppm)','灵敏度(ppm/kPa)'],
+        scan_rows,
+        caption_text='表5-4  Top10高灵敏度风箱的CO响应范围（全范围压力扫描）')
 
     head(doc,'5.6  鲁棒性验证',2)
     tbl(doc,
