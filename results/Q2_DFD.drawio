@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1"
+              tooltips="1" connect="1" arrows="1" fold="1"
+              page="1" pageScale="1" pageWidth="1654" pageHeight="1169"
+              math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="100" value="E1
+烧结机
+传感器数据" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#333333;fontColor=#333333;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="60" y="80" width="130" height="70" as="geometry" />
+    </mxCell>
+    <mxCell id="101" value="E2
+当前工况
+在线输入" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#333333;fontColor=#333333;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="60" y="700" width="130" height="70" as="geometry" />
+    </mxCell>
+    <mxCell id="102" value="E3
+预测输出
+CO(ppm)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#333333;fontColor=#333333;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="1450" y="700" width="130" height="70" as="geometry" />
+    </mxCell>
+    <mxCell id="103" value="P1
+数据预处理
+与滞后对齐
+(FFT互相关)" style="shape=mxgraph.flowchart.process;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#2980b9;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="310" y="60" width="170" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="104" value="P2
+特征工程
+(物理41+梯度34
++统计4+CO自回归5)" style="shape=mxgraph.flowchart.process;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#2980b9;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="620" y="240" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="105" value="P3
+PSO超参数
+寻优
+(8粒子×10迭代)" style="shape=mxgraph.flowchart.process;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#2980b9;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="310" y="450" width="170" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="106" value="P4
+XGBoost
+模型训练
+(3折TimeSeriesCV)" style="shape=mxgraph.flowchart.process;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#2980b9;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="620" y="450" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="107" value="P5
+在线CO
+浓度预测
+(实时推理)" style="shape=mxgraph.flowchart.process;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#2980b9;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="1100" y="680" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="108" value="D1  对齐后工况时序数据" style="shape=mxgraph.dfd.dataStore;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="580" y="80" width="260" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="109" value="D2  异常区段标记 (1045-1061)" style="shape=mxgraph.dfd.dataStore;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="310" y="220" width="260" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="110" value="D3  特征矩阵 X  (n×84维)" style="shape=mxgraph.dfd.dataStore;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="580" y="370" width="260" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="111" value="D4  最优超参数 θ*  (7个参数)" style="shape=mxgraph.dfd.dataStore;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="310" y="600" width="260" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="112" value="D5  XGBoost 预测模型 (已训练)" style="shape=mxgraph.dfd.dataStore;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1a1a1a;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="900" y="560" width="280" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="113" value="原始传感器
+时序数据" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="1";exitY="0.5";exitDx="0";exitDy="0";entryX="0";entryY="0.5";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="100" target="103" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="114" value="对齐后
+时序数据" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="1";exitY="0.3";exitDx="0";exitDy="0";entryX="0";entryY="0.5";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="103" target="108" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="115" value="异常时段
+标记" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="0.5";exitY="1";exitDx="0";exitDy="0";entryX="0.5";entryY="0";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="103" target="109" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="116" value="去除异常后
+时序数据" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="0.5";exitY="1";exitDx="0";exitDy="0";entryX="0.5";entryY="0";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="108" target="104" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="117" value="84维
+特征矩阵" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="0.5";exitY="1";exitDx="0";exitDy="0";entryX="0.5";entryY="0";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="104" target="110" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="118" value="训练特征
+(CV评估)" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="0";exitY="0.5";exitDx="0";exitDy="0";entryX="1";entryY="0.5";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="110" target="105" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="119" value="训练集
+X_train" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="0.5";exitY="1";exitDx="0";exitDy="0";entryX="0.5";entryY="0";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="110" target="106" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="120" value="最优参数
+(CV-R²最大)" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="0.5";exitY="1";exitDx="0";exitDy="0";entryX="0.5";entryY="0";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="105" target="111" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="121" value="超参数
+配置" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="1";exitY="0.5";exitDx="0";exitDy="0";entryX="0";entryY="1";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="111" target="106" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="122" value="已训练
+XGBoost模型" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="1";exitY="0.5";exitDx="0";exitDy="0";entryX="0";entryY="0.5";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="106" target="112" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="123" value="预测模型
+加载" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="0.5";exitY="1";exitDx="0";exitDy="0";entryX="0.5";entryY="0";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="112" target="107" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="124" value="当前时刻
+传感器+CO滞后" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="1";exitY="0.5";exitDx="0";exitDy="0";entryX="0";entryY="1";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="101" target="107" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="125" value="CO浓度
+预测值(ppm)" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX="1";exitY="0.5";exitDx="0";exitDy="0";entryX="0";entryY="0.5";entryDx="0";entryDy="0";strokeColor=#555555;strokeWidth=1.5;fontSize=9;fontColor=#333333;" edge="1" source="107" target="102" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="126" value="问题二数据流程图：基于PSO-XGBoost的CO浓度预测系统" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="400" y="10" width="700" height="35" as="geometry" />
+    </mxCell>
+    <mxCell id="127" value="图例说明
+■ 矩形(灰)：外部实体
+■ 圆角矩形(蓝)：过程
+■ 双线矩形(黄)：数据存储
+→ 箭头：数据流" style="text;html=1;strokeColor=#cccccc;fillColor=#f9f9f9;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=9;" vertex="1" parent="1">
+      <mxGeometry x="60" y="850" width="200" height="100" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>
