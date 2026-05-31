@@ -118,10 +118,11 @@ def table_box(ax, cx, cy, rows, fc=LBLUE, fs=8.5, zorder=3):
 
 
 def thick_arr(ax, x0, y0, x1, y1, lbl='', color=NAVY, lw=3.5, fs=8.5):
-    """粗箭头（主数据流）"""
+    """粗箭头（主数据流）—— shrink 防止插入形状内部"""
     ax.annotate('', xy=(x1, y1), xytext=(x0, y0),
                 arrowprops=dict(arrowstyle='->', color=color,
-                                lw=lw, mutation_scale=20), zorder=7)
+                                lw=lw, mutation_scale=20,
+                                shrinkA=4, shrinkB=4), zorder=7)
     if lbl:
         mx, my = (x0+x1)/2, (y0+y1)/2
         ax.text(mx+0.05, my+0.12, lbl, ha='center', va='center',
@@ -130,14 +131,15 @@ def thick_arr(ax, x0, y0, x1, y1, lbl='', color=NAVY, lw=3.5, fs=8.5):
 
 
 def thin_arr(ax, pts, lbl='', color=BEIGE, lw=1.5, fs=7.8, li=0, ls='top'):
-    """细金箭头（数据连接）"""
+    """细金箭头（数据连接）—— 最后一段 shrinkB 防止箭头插入目标"""
     xs = [p[0] for p in pts]; ys = [p[1] for p in pts]
     for i in range(len(pts)-2):
         ax.plot([xs[i], xs[i+1]], [ys[i], ys[i+1]],
                 color=color, lw=lw, zorder=6)
     ax.annotate('', xy=(xs[-1], ys[-1]), xytext=(xs[-2], ys[-2]),
                 arrowprops=dict(arrowstyle='->', color=color,
-                                lw=lw, mutation_scale=13), zorder=6)
+                                lw=lw, mutation_scale=13,
+                                shrinkA=3, shrinkB=4), zorder=6)
     if lbl:
         mx = (xs[li]+xs[li+1])/2; my = (ys[li]+ys[li+1])/2
         dy = 0.12 if ls == 'top' else -0.12; dx = 0.0
@@ -238,18 +240,26 @@ def gen_q2():
     ax.text(11.5, 2.3, '输出', ha='center', fontsize=9,
             color=GOLD, fontweight='bold')
 
-    # ── 连线 ──
-    thick_arr(ax, 2.3, 6.35, 3.7, 5.8)
-    thick_arr(ax, 2.4, 3.7, 3.7, 4.2)
-    thin_arr(ax, [(5.5, 6.8), (7.0, 6.2)], '特征矩阵 X_tr')
-    thin_arr(ax, [(5.5, 5.5), (7.0, 5.7)], '84维特征')
-    thin_arr(ax, [(5.5, 3.5), (7.0, 3.9)], '')
-    thin_arr(ax, [(4.6, 2.4), (4.6, 1.99)], 'CV数据')
-    thin_arr(ax, [(5.85, 1.6), (7.0, 2.0)], 'CV-R² 适应度')
-    thick_arr(ax, 9.4, 5.5, 9.8, 5.4)
-    thin_arr(ax, [(8.2, 4.62), (8.2, 3.85), (9.8, 3.85)], 'gbest 最优参数', li=1)
+    # ── 连线（所有坐标均在形状边缘，不进入内部）──
+    # 表格右边缘(2.55) → 特征列表左边缘(3.7)
+    thick_arr(ax, 2.55, 6.4,  3.7,  6.4)
+    # 特征色块右边缘(2.9) → 特征列表左边缘(3.7)
+    thick_arr(ax, 2.9,  3.85, 3.7,  4.2)
+    # 特征列表右边缘(5.5) → PSO云朵左侧(7.05)
+    thin_arr(ax, [(5.5, 6.6), (7.05, 6.2)], '特征矩阵 X_tr')
+    thin_arr(ax, [(5.5, 5.2), (7.05, 5.6)], '84维特征')
+    # 特征列表底边缘(2.2) → 3折CV顶边缘(1.99)
+    thin_arr(ax, [(4.6, 2.2), (4.6, 1.99)], 'CV数据')
+    # 3折CV右边缘(5.85) → 搜索空间左边缘(6.65)
+    thin_arr(ax, [(5.85, 1.6), (6.65, 2.0)], 'CV-R² 适应度')
+    # PSO云朵右侧(9.55) → XGBoost左边缘(9.8)
+    thick_arr(ax, 9.55, 5.6,  9.8,  5.4)
+    # PSO注释右边缘(9.5) → 折点 → XGBoost底边缘入口
+    thin_arr(ax, [(9.5, 4.0), (10.15, 4.0), (10.15, 4.65)], 'gbest 最优参数', li=0)
+    # XGBoost底边缘(4.65) → 5折CV顶边缘(4.48)
     thin_arr(ax, [(11.5, 4.65), (11.5, 4.48)])
-    thick_arr(ax, 11.5, 3.73, 11.5, 3.21)
+    # 5折CV底边缘(3.72) → 输出框顶边缘(3.21)
+    thick_arr(ax, 11.5, 3.72, 11.5, 3.21)
 
     plt.tight_layout(pad=0.3)
     plt.savefig('paper_figures/Q2_PSO_arch.png', dpi=170,
@@ -330,18 +340,29 @@ def gen_q3():
     ax.text(11.4, 2.3, '输出至 DCS 控制系统',
             ha='center', fontsize=9, color=GOLD, fontweight='bold')
 
-    # ── 连线 ──
-    thick_arr(ax, 2.3, 6.35, 3.7, 5.8)
-    thick_arr(ax, 2.3, 3.7, 3.7, 4.2)
-    thin_arr(ax, [(5.5, 6.8), (7.0, 6.1)], '84维特征向量')
-    thin_arr(ax, [(5.5, 5.3), (7.0, 5.7)], '')
-    thin_arr(ax, [(4.6, 2.4), (4.6, 2.05)], 'CO初始化')
-    thin_arr(ax, [(5.95, 1.6), (7.0, 1.95)], 'CO初始估计')
-    thin_arr(ax, [(7.9, 2.45), (7.9, 4.45), (7.0, 5.1)], '惩罚函数', li=1)
-    thick_arr(ax, 9.3, 5.5, 9.8, 5.6)
-    thin_arr(ax, [(8.1, 4.45), (8.1, 3.85), (9.8, 3.85)], 'gbest负压', li=1)
-    thin_arr(ax, [(8.1, 3.55), (8.1, 2.2), (7.0, 2.1)], 'CO预测代理', li=1)
+    # ── 连线（所有坐标均在形状边缘，不进入内部）──
+    # 表格右边缘(2.55) → 特征列表左边缘(3.7)
+    thick_arr(ax, 2.55, 6.4,  3.7,  6.4)
+    # 代理模型色块右边缘(2.9) → 特征列表左边缘(3.7)
+    thick_arr(ax, 2.9,  3.85, 3.7,  4.2)
+    # 特征列表右边缘(5.5) → PSO云朵左侧(7.05)
+    thin_arr(ax, [(5.5, 6.6), (7.05, 6.0)], '84维特征向量')
+    thin_arr(ax, [(5.5, 5.0), (7.05, 5.6)], '')
+    # 特征列表底边缘(2.2) → 不动点注释顶边缘(2.05)
+    thin_arr(ax, [(4.6, 2.2), (4.6, 2.05)], 'CO初始化')
+    # 不动点注释右边缘(5.95) → 惩罚注释左边缘(6.65)
+    thin_arr(ax, [(5.95, 1.6), (6.65, 1.95)], 'CO初始估计')
+    # 惩罚注释顶边缘(2.45) → 折点 → PSO云朵左侧(7.05)
+    thin_arr(ax, [(7.9, 2.45), (7.9, 4.7), (7.05, 5.2)], '惩罚函数', li=1)
+    # PSO云朵右侧(9.5) → 约束注释左边缘(10.0)
+    thick_arr(ax, 9.5,  5.6,  10.0, 5.6)
+    # PSO注释右边缘(9.7) → 折点 → 输出椭圆左边缘(9.8)
+    thin_arr(ax, [(9.7, 4.0), (10.2, 4.0), (10.2, 4.3)], 'gbest负压', li=0)
+    # 代理模型色块底→折→惩罚注释（代理预测回路）
+    thin_arr(ax, [(1.5, 2.45), (1.5, 1.5), (6.65, 1.5)], 'CO预测代理', li=1)
+    # 约束注释底边缘(5.22) → 输出椭圆顶边缘(5.0)
     thick_arr(ax, 11.4, 5.22, 11.4, 5.0)
+    # 输出椭圆底边缘(3.65) → 结果框顶边缘(3.21)
     thick_arr(ax, 11.4, 3.65, 11.4, 3.21)
 
     plt.tight_layout(pad=0.3)
