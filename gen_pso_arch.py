@@ -147,121 +147,109 @@ def thin_arr(ax, pts, lbl='', color=BEIGE, lw=1.5, fs=7.8, li=0, ls='top'):
                 bbox=dict(fc='white', ec='none', pad=0.1, alpha=0.9))
 
 
+def feat_group_grid(ax, cx, cy, items, zorder=4):
+    """2列紧凑特征分组小色块（替代大背景椭圆）"""
+    colors = ['#2980B9','#E67E22','#8E44AD','#148F77']
+    cols, w, h, gap = 2, 1.35, 0.68, 0.10
+    rows = (len(items)+1)//2
+    total_w = cols*w + (cols-1)*gap
+    total_h = rows*h + (rows-1)*gap
+    x0 = cx - total_w/2
+    y0 = cy + total_h/2
+    for i,(label,fc) in enumerate(zip(items, colors)):
+        r, c = divmod(i, cols)
+        bx = x0 + c*(w+gap) + w/2
+        by = y0 - r*(h+gap) - h/2
+        ax.add_patch(FancyBboxPatch((bx-w/2, by-h/2), w, h,
+                     boxstyle='round,pad=0.05', fc=fc, ec='none', zorder=zorder))
+        ax.text(bx, by, label, ha='center', va='center',
+                fontsize=9, color=WHITE, fontweight='bold',
+                zorder=zorder+1, multialignment='center')
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Q2 PSO 超参数优化架构图
 # ══════════════════════════════════════════════════════════════════════════════
 def gen_q2():
-    fig, ax = plt.subplots(figsize=(15, 9))
-    ax.set_xlim(0, 15); ax.set_ylim(0, 9)
+    fig, ax = plt.subplots(figsize=(14, 8))
+    ax.set_xlim(0, 14); ax.set_ylim(0, 8)
     ax.axis('off')
     fig.patch.set_facecolor(WHITE)
 
-    # ── 标题 ──
-    ax.text(7.5, 8.65,
-            'Q2  XGBoost-PSO 超参数优化  系统架构图',
-            ha='center', va='center', fontsize=14, fontweight='bold', color='#1C2833')
+    ax.text(7.0, 7.72, 'Q2  XGBoost-PSO 超参数优化  系统架构图',
+            ha='center', va='center', fontsize=13.5, fontweight='bold', color='#1C2833')
 
-    # ── 左：输入数据 ──
-    ax.text(1.5, 7.85, '输入训练数据', ha='center', fontsize=9,
+    # ── 左：输入数据表格 ──
+    ax.text(1.4, 7.2, '输入训练数据', ha='center', fontsize=10,
             fontweight='bold', color='#1C2833')
-    table_box(ax, 1.5, 7.1,
+    table_box(ax, 1.4, 6.35,
               [['x1', 'x2', '...', 'x84'],
                ['p11', 'p12', '...', 'CO1'],
                ['p21', 'p22', '...', 'CO2'],
-               ['.',  '.',  '..',  '.' ]])
-    ax.text(1.5, 5.75, '1624 × 84  训练样本',
-            ha='center', fontsize=8, color='#555555')
+               ['..',  '..',  '...',  '..' ]])
+    ax.text(1.4, 5.1, '1624×84  训练样本',
+            ha='center', fontsize=9, color='#555555')
 
-    # ── 左下：特征分组说明（仿椭圆内含圆）──
-    ax.add_patch(Ellipse((1.8, 4.0), 3.2, 2.6,
-                         fc='#EBF5FB', ec='#2980B9', lw=1.5, zorder=2))
-    ax.add_patch(Ellipse((2.9, 4.5), 1.4, 1.0,
-                         fc='#D6EAF8', ec='#2980B9', lw=1, zorder=3))
-    ax.text(2.9, 4.5, 'p1\n物理特征\n41维',
-            ha='center', va='center', fontsize=7.5,
-            color='#1C2833', zorder=4, multialignment='center')
-    ax.add_patch(Ellipse((1.0, 4.6), 1.1, 0.8,
-                         fc='#FDEBD0', ec='#E67E22', lw=1, zorder=3))
-    ax.text(1.0, 4.6, 'p2\n梯度\n34维',
-            ha='center', va='center', fontsize=7.5,
-            color='#1C2833', zorder=4, multialignment='center')
-    ax.add_patch(Ellipse((1.2, 3.3), 1.0, 0.78,
-                         fc='#E8DAEF', ec='#8E44AD', lw=1, zorder=3))
-    ax.text(1.2, 3.3, 'p3\n统计\n4维',
-            ha='center', va='center', fontsize=7.5,
-            color='#1C2833', zorder=4, multialignment='center')
-    ax.add_patch(Ellipse((2.5, 3.2), 1.1, 0.78,
-                         fc='#D5F5E3', ec='#148F77', lw=1, zorder=3))
-    ax.text(2.5, 3.2, 'p4\nCO自回归\n5维',
-            ha='center', va='center', fontsize=7.5,
-            color='#1C2833', zorder=4, multialignment='center')
-    ax.text(1.8, 2.55, '特征分组（84维）',
-            ha='center', fontsize=8, color='#555555', style='italic')
+    # ── 左下：特征分组（紧凑2×2色块）──
+    feat_group_grid(ax, 1.5, 3.9,
+                    ['物理特征\n41维', '梯度特征\n34维',
+                     '统计特征\n4维',  'CO自回归\n5维'])
+    ax.text(1.5, 2.45, '特征工程（84维）',
+            ha='center', fontsize=9.5, color='#555555', style='italic', fontweight='bold')
 
     # ── 中：特征列表高矩形 ──
-    feat_box(ax, 5.2, 5.8, 1.7, 4.2,
-             '特征体系',
+    feat_box(ax, 4.6, 4.8, 1.8, 5.2,
+             '特征体系 84维',
              ['机速 × 1', '负压 × 18', '温度 × 18',
-              '大烟道 × 4', '压力梯度×17', '温度梯度×17',
-              '统计特征×4', 'CO自回归×5'],
+              '大烟道 × 4', '压力梯度 ×17', '温度梯度 ×17',
+              '统计特征 × 4', 'CO自回归 × 5'],
              bg='#148F77')
 
-    # ── 中：3折CV注释 ──
-    annot_box(ax, 5.2, 2.4, 2.4, 0.7,
-              '3折 TimeSeriesSplit CV\n（PSO内部适应度评估）',
-              fc=PURPLE, fs=8)
+    # ── 中下：3折CV注释 ──
+    annot_box(ax, 4.6, 1.6, 2.5, 0.78,
+              '3折 TimeSeriesSplit CV\n（PSO内部加速评估）',
+              fc=PURPLE, fs=9)
 
-    # ── 中右：PSO 搜索空间注释 ──
-    annot_box(ax, 8.8, 3.0, 2.5, 1.0,
-              '7维超参数搜索空间\nlr∈[0.01,0.50]\ndepth∈[2,8]  n_est∈[50,500]',
-              fc=GRAY, fs=7.8)
+    # ── 中右：搜索空间注释 ──
+    annot_box(ax, 8.0, 2.0, 2.7, 1.0,
+              '7维超参数搜索空间\nlr∈[0.01,0.50]  depth∈[2,8]\nn_est∈[50,500]  sub∈[0.5,1]',
+              fc=GRAY, fs=9)
 
-    # ── 右上：PSO云朵主模型 ──
-    cloud(ax, 9.5, 6.8, 3.2, 2.2, RED,
-          'PSO\n超参数优化',
-          fs=12, italic=True)
-    annot_box(ax, 9.5, 5.1, 2.8, 0.72,
-              'N=8粒子  ×  T=10迭代\nw=0.8,  c1=c2=2.0（固定）',
-              fc='#922B21', fs=8)
+    # ── 右：PSO云朵（缩小，字体放大）──
+    cloud(ax, 8.2, 5.6, 2.4, 1.7, RED,
+          'PSO\n超参数优化', fs=13, italic=True)
+    annot_box(ax, 8.2, 4.0, 2.6, 0.76,
+              'N=8粒子  T=10迭代\nw=0.8,  c1=c2=2.0（固定）',
+              fc='#922B21', fs=9.5)
 
-    # ── 右：XGBoost模型椭圆 ──
-    oval(ax, 12.6, 6.2, 3.5, 1.6, TEAL,
-         'XGBoost\n预测模型', fs=11)
+    # ── 右：XGBoost 椭圆 ──
+    oval(ax, 11.5, 5.4, 3.4, 1.5, TEAL,
+         'XGBoost\n预测模型', fs=12)
 
-    # ── 右下：5折最终评估注释 ──
-    annot_box(ax, 12.6, 4.8, 3.0, 0.72,
-              '5折 TimeSeriesSplit CV\n最终评估  R²=0.8862',
-              fc='#117A65', fs=8)
+    # ── 右下：5折CV ──
+    annot_box(ax, 11.5, 4.1, 3.0, 0.76,
+              '5折 TimeSeriesSplit CV（最终评估）\nR²=0.8862  ±  0.101',
+              fc='#117A65', fs=9)
 
-    # ── 右下：输出 ──
-    proc_box(ax, 12.6, 3.5, 3.0, 0.75,
-             'CO 浓度预测模型\n测试集 R²=0.9493  MAE=43.18 ppm',
-             fc=GOLD, fs=8.5)
-    ax.text(12.6, 3.05, '输出', ha='center', fontsize=8,
+    # ── 输出 ──
+    proc_box(ax, 11.5, 2.8, 3.2, 0.82,
+             'CO 浓度预测模型\n测试集 R²=0.9493   MAE=43 ppm',
+             fc=GOLD, fs=9.5)
+    ax.text(11.5, 2.3, '输出', ha='center', fontsize=9,
             color=GOLD, fontweight='bold')
 
     # ── 连线 ──
-    # 输入 → 特征列表
-    thick_arr(ax, 2.55, 7.1, 4.3, 6.8, '')
-    # 特征分组 → 特征列表
-    thick_arr(ax, 2.85, 4.5, 4.3, 5.0, '')
-    # 特征列表 → PSO
-    thin_arr(ax, [(6.05, 7.5), (8.0, 7.5)], '特征矩阵 X_tr')
-    thin_arr(ax, [(6.05, 6.5), (8.0, 6.1)], '84维特征')
-    thin_arr(ax, [(6.05, 5.2), (8.0, 5.5)], '')
-    # 特征列表 → 3折CV
-    thin_arr(ax, [(5.2, 3.7), (5.2, 2.75)], 'CV数据')
-    # 3折CV → PSO（反馈适应度）
-    thin_arr(ax, [(6.4, 2.4), (8.0, 3.0)], 'CV-R² 适应度')
-    # PSO → XGBoost
-    thick_arr(ax, 10.65, 6.5, 10.8, 6.3, '')
-    # gbest → XGBoost
-    thin_arr(ax, [(9.5, 5.7), (9.5, 4.7), (10.8, 4.7)],
-             'gbest 最优参数', li=1)
-    # XGBoost → 5折CV
-    thin_arr(ax, [(12.6, 5.4), (12.6, 5.15)], '')
-    # 5折CV → 输出
-    thick_arr(ax, 12.6, 4.44, 12.6, 3.88, '')
+    thick_arr(ax, 2.3, 6.35, 3.7, 5.8)
+    thick_arr(ax, 2.4, 3.7, 3.7, 4.2)
+    thin_arr(ax, [(5.5, 6.8), (7.0, 6.2)], '特征矩阵 X_tr')
+    thin_arr(ax, [(5.5, 5.5), (7.0, 5.7)], '84维特征')
+    thin_arr(ax, [(5.5, 3.5), (7.0, 3.9)], '')
+    thin_arr(ax, [(4.6, 2.4), (4.6, 1.99)], 'CV数据')
+    thin_arr(ax, [(5.85, 1.6), (7.0, 2.0)], 'CV-R² 适应度')
+    thick_arr(ax, 9.4, 5.5, 9.8, 5.4)
+    thin_arr(ax, [(8.2, 4.62), (8.2, 3.85), (9.8, 3.85)], 'gbest 最优参数', li=1)
+    thin_arr(ax, [(11.5, 4.65), (11.5, 4.48)])
+    thick_arr(ax, 11.5, 3.73, 11.5, 3.21)
 
     plt.tight_layout(pad=0.3)
     plt.savefig('paper_figures/Q2_PSO_arch.png', dpi=170,
@@ -274,116 +262,87 @@ def gen_q2():
 # Q3 PSO 负压优化架构图
 # ══════════════════════════════════════════════════════════════════════════════
 def gen_q3():
-    fig, ax = plt.subplots(figsize=(15, 9))
-    ax.set_xlim(0, 15); ax.set_ylim(0, 9)
+    fig, ax = plt.subplots(figsize=(14, 8))
+    ax.set_xlim(0, 14); ax.set_ylim(0, 8)
     ax.axis('off')
     fig.patch.set_facecolor(WHITE)
 
-    ax.text(7.5, 8.65,
-            'Q3  PSO 风箱负压优化  系统架构图',
-            ha='center', va='center', fontsize=14, fontweight='bold', color='#1C2833')
+    ax.text(7.0, 7.72, 'Q3  PSO 风箱负压优化  系统架构图',
+            ha='center', va='center', fontsize=13.5, fontweight='bold', color='#1C2833')
 
-    # ── 左：当前工况输入 ──
-    ax.text(1.5, 7.85, '当前工况快照', ha='center', fontsize=9,
+    # ── 左：当前工况表格 ──
+    ax.text(1.4, 7.2, '当前工况快照', ha='center', fontsize=10,
             fontweight='bold', color='#1C2833')
-    table_box(ax, 1.5, 7.0,
-              [['风箱', 'p1', 'p2', '...', 'p18'],
-               ['负压', '-11', '-14', '...', '-13'],
-               ['温度', '89', '112', '...', '145'],
-               ['机速', '1.46', 'm/min', '', '']],
-              fs=7.8)
+    table_box(ax, 1.4, 6.35,
+              [['风箱', 'p1', 'p2', 'p18'],
+               ['负压', '-11', '-14', '-13'],
+               ['温度', '89', '112', '145'],
+               ['机速', '', '1.46 m/min', '']],
+              fs=8.2)
+    ax.text(1.4, 5.1, '当前 CO = 3495 ppm',
+            ha='center', fontsize=9, color='#C0392B', fontweight='bold')
 
-    # ── 左下：Q2 模型组（椭圆内含圆）──
-    ax.add_patch(Ellipse((1.9, 3.9), 3.4, 2.8,
-                         fc='#EBF5FB', ec='#148F77', lw=1.8, zorder=2))
-    ax.add_patch(Ellipse((2.0, 4.3), 1.5, 1.0,
-                         fc='#D1F2EB', ec='#148F77', lw=1, zorder=3))
-    ax.text(2.0, 4.3, 'Q2 XGBoost\n预测模型',
-            ha='center', va='center', fontsize=7.8,
-            color='#0E6655', fontweight='bold', zorder=4, multialignment='center')
-    ax.add_patch(Ellipse((1.1, 3.2), 1.2, 0.85,
-                         fc='#FDEBD0', ec='#E67E22', lw=1, zorder=3))
-    ax.text(1.1, 3.2, '标准化\n参数 scaler',
-            ha='center', va='center', fontsize=7.5,
-            color='#1C2833', zorder=4, multialignment='center')
-    ax.add_patch(Ellipse((2.8, 3.2), 1.2, 0.85,
-                         fc='#E8DAEF', ec='#8E44AD', lw=1, zorder=3))
-    ax.text(2.8, 3.2, '特征\n工程参数',
-            ha='center', va='center', fontsize=7.5,
-            color='#1C2833', zorder=4, multialignment='center')
-    ax.text(1.9, 2.5, 'Q2 训练产物（代理模型）',
-            ha='center', fontsize=8, color='#555555', style='italic')
+    # ── 左下：Q2代理模型（紧凑色块组）──
+    feat_group_grid(ax, 1.5, 3.8,
+                    ['Q2 XGBoost\n代理模型', '标准化\nscaler',
+                     '特征工程\n参数', '滞后量\n配置'])
+    ax.text(1.5, 2.45, 'Q2 训练产物（代理模型）',
+            ha='center', fontsize=9.5, color='#555555', style='italic', fontweight='bold')
 
     # ── 中：特征构造列表 ──
-    feat_box(ax, 5.2, 5.7, 1.7, 4.0,
-             '特征构造\n(84维)',
+    feat_box(ax, 4.6, 4.8, 1.8, 5.2,
+             '特征构造 84维',
              ['机速 × 1', '负压 × 18', '温度 × 18',
-              '大烟道 × 4', '压力梯度×17', '温度梯度×17',
+              '大烟道 × 4', '压力梯度 ×17', '温度梯度 ×17',
               '统计特征 × 4', 'CO自回归 × 5'],
              bg='#1A5276')
 
-    # ── 中：不动点初始化注释 ──
-    annot_box(ax, 5.2, 2.4, 2.6, 0.88,
-              '不动点初始化\nX(t+1) = 0.5·X_t + 0.5·f(X_t)\n迭代至 |ΔX| < 1 ppm 收敛',
-              fc=PURPLE, fs=7.8)
+    # ── 中下：不动点注释 ──
+    annot_box(ax, 4.6, 1.6, 2.7, 0.9,
+              '不动点初始化\nX(t+1) = 0.5·X_t + 0.5·f(X_t)\n收敛条件: |ΔX| < 1 ppm',
+              fc=PURPLE, fs=9)
 
-    # ── 中右：可靠性惩罚注释 ──
-    annot_box(ax, 8.8, 2.8, 2.6, 0.88,
-              '可靠性惩罚项\npenalty = Σ exp(-10·dist)\n目标 = CO_pred + α·penalty',
-              fc='#922B21', fs=7.8)
+    # ── 中右：惩罚项注释 ──
+    annot_box(ax, 7.9, 2.0, 2.6, 0.9,
+              '可靠性惩罚\npenalty = Σ exp(-10·dist)\n目标 = CO_pred + α·penalty',
+              fc='#922B21', fs=9)
 
-    # ── 右上：PSO云朵主模型 ──
-    cloud(ax, 9.5, 6.8, 3.2, 2.2, RED,
-          'PSO\n负压优化',
-          fs=12, italic=True)
+    # ── 右：PSO云朵 ──
+    cloud(ax, 8.1, 5.6, 2.4, 1.7, RED,
+          'PSO\n负压优化', fs=13, italic=True)
+    annot_box(ax, 8.1, 4.0, 2.6, 0.9,
+              'N=40粒子  T=150迭代\n前30%探索 | 中40%平衡 | 后30%开发\nα: 50 → 500 动态增大',
+              fc=GRAY, fs=9)
 
-    # ── PSO 自适应参数注释 ──
-    annot_box(ax, 9.5, 4.95, 2.9, 0.88,
-              'N=40粒子  ×  T=150迭代\n前30%探索→中40%平衡→后30%开发\nα: 50 → 500 动态增大',
-              fc=GRAY, fs=7.8)
+    # ── 右：约束注释 ──
+    annot_box(ax, 11.4, 5.6, 2.8, 0.76,
+              '18维约束边界\n各风箱[10%分位, 90%分位]',
+              fc='#117A65', fs=9.5)
 
-    # ── 右：约束边界注释 ──
-    annot_box(ax, 12.7, 5.9, 2.8, 0.72,
-              '18维约束边界\n各风箱: [10%分位数, 90%分位数]',
-              fc='#117A65', fs=8)
-
-    # ── 右下：输出椭圆 ──
-    oval(ax, 12.7, 4.7, 3.4, 1.4, TEAL,
-         '最优负压方案\n输出', fs=11)
+    # ── 右：输出椭圆 ──
+    oval(ax, 11.4, 4.3, 3.2, 1.4, TEAL,
+         '最优负压方案\n输出', fs=12)
 
     # ── 输出结果框 ──
-    proc_box(ax, 12.7, 3.4, 3.2, 0.82,
-             '最优 18 维风箱负压\nCO 降低 62.8%  (3495→1299 ppm)',
-             fc=GOLD, fs=8.5)
-    ax.text(12.7, 2.95, '输出至 DCS 控制系统',
-            ha='center', fontsize=8, color=GOLD, fontweight='bold')
+    proc_box(ax, 11.4, 2.8, 3.2, 0.82,
+             '最优18维风箱负压\nCO降低 62.8%  (3495→1299 ppm)',
+             fc=GOLD, fs=9.5)
+    ax.text(11.4, 2.3, '输出至 DCS 控制系统',
+            ha='center', fontsize=9, color=GOLD, fontweight='bold')
 
     # ── 连线 ──
-    # 当前工况 → 特征构造
-    thick_arr(ax, 2.55, 7.0, 4.3, 6.6, '')
-    # Q2模型 → 特征构造
-    thick_arr(ax, 3.05, 4.3, 4.3, 5.5, '')
-    # 特征构造 → 不动点初始化
-    thin_arr(ax, [(5.2, 3.7), (5.2, 2.84)], 'CO自回归占位')
-    # 不动点 → PSO
-    thin_arr(ax, [(6.5, 2.4), (8.0, 3.2)], 'CO初始估计')
-    # 特征构造 → PSO
-    thin_arr(ax, [(6.05, 7.0), (8.0, 7.5)], '84维特征向量')
-    thin_arr(ax, [(6.05, 6.0), (8.0, 6.2)], '')
-    # 可靠性惩罚 → PSO
-    thin_arr(ax, [(8.8, 3.24), (8.8, 5.8), (8.0, 6.0)],
-             '惩罚函数', li=1)
-    # PSO → 约束
-    thin_arr(ax, [(10.65, 7.1), (12.7, 6.26)], '候选方案')
-    # PSO → 自适应参数（自环标注）
-    thin_arr(ax, [(9.5, 5.7), (9.5, 5.39)], '参数调度')
-    # 约束 → 输出椭圆
-    thick_arr(ax, 12.7, 5.54, 12.7, 5.4, '')
-    # 输出椭圆 → 结果框
-    thick_arr(ax, 12.7, 4.0, 12.7, 3.81, '')
-    # Q2模型 → PSO（代理预测）
-    thin_arr(ax, [(3.05, 3.9), (4.3, 3.9), (4.3, 2.4), (6.5, 2.4)],
-             'CO预测代理', li=2)
+    thick_arr(ax, 2.3, 6.35, 3.7, 5.8)
+    thick_arr(ax, 2.3, 3.7, 3.7, 4.2)
+    thin_arr(ax, [(5.5, 6.8), (7.0, 6.1)], '84维特征向量')
+    thin_arr(ax, [(5.5, 5.3), (7.0, 5.7)], '')
+    thin_arr(ax, [(4.6, 2.4), (4.6, 2.05)], 'CO初始化')
+    thin_arr(ax, [(5.95, 1.6), (7.0, 1.95)], 'CO初始估计')
+    thin_arr(ax, [(7.9, 2.45), (7.9, 4.45), (7.0, 5.1)], '惩罚函数', li=1)
+    thick_arr(ax, 9.3, 5.5, 9.8, 5.6)
+    thin_arr(ax, [(8.1, 4.45), (8.1, 3.85), (9.8, 3.85)], 'gbest负压', li=1)
+    thin_arr(ax, [(8.1, 3.55), (8.1, 2.2), (7.0, 2.1)], 'CO预测代理', li=1)
+    thick_arr(ax, 11.4, 5.22, 11.4, 5.0)
+    thick_arr(ax, 11.4, 3.65, 11.4, 3.21)
 
     plt.tight_layout(pad=0.3)
     plt.savefig('paper_figures/Q3_PSO_arch.png', dpi=170,
