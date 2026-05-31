@@ -101,7 +101,7 @@ def gen_q2_pso():
 
     ax.text(4.5, 17.65, 'Q2  PSO 超参数优化流程',
             ha='center', va='center', fontsize=13, fontweight='bold')
-    ax.text(4.5, 17.25, '目标：最大化 XGBoost 交叉验证 R²\n搜索空间：7 维超参数',
+    ax.text(4.5, 17.25, '目标：最大化 XGBoost 交叉验证 R²  |  搜索空间：7 维超参数\nPSO内部用 3折CV（加速）；最终评估用 5折CV（论文指标）',
             ha='center', va='center', fontsize=8.5, color='#555555')
 
     W, H  = 5.8, 0.72
@@ -118,7 +118,7 @@ def gen_q2_pso():
          '初始化粒子群\nN=8 粒子，在 [lb, ub] 内随机生成位置\n速度初始化为 0', color=C_INIT)
 
     rect(ax, cx, 13.75, W, H,
-         '对每个粒子，用当前超参数训练 XGBoost\nTimeSeriesSplit 3折 CV，计算平均 R² 作为适应度',
+         '对每个粒子，用当前超参数训练 XGBoost\nTimeSeriesSplit 3折 CV（内部加速用）\n计算平均 R² 作为粒子适应度',
          color=C_LOOP)
 
     rect(ax, cx, 12.65, W, H,
@@ -136,10 +136,10 @@ def gen_q2_pso():
     diamond(ax, cx, 9.25, WD, HD, '迭代次数\n达到 10？')
 
     rect(ax, cx, 8.1, W, H,
-         '以 gbest 超参数重新训练 XGBoost\n（全训练集，无 CV）')
+         '以 gbest 超参数重新训练 XGBoost\n（全训练集）\n再做 TimeSeriesSplit 5折 CV 最终评估')
 
     para(ax, cx, 7.05, W, H,
-         '输出：最优超参数组合（7维）\n最优 CV-R²，最终模型')
+         '输出：最优超参数组合（7维）\n5折 CV 平均 R²（论文报告指标）\n最终预测模型')
 
     oval(ax, cx, 6.15, 2.6, 0.6, '结  束')
 
