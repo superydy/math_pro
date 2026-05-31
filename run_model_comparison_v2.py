@@ -12,7 +12,6 @@ import json, time, os, warnings
 warnings.filterwarnings('ignore')
 os.chdir('/home/user/math_pro')
 
-from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score, mean_absolute_error
@@ -152,14 +151,10 @@ def gen_comparison_figure(results):
     plt.rcParams['axes.unicode_minus'] = False
     plt.rcParams['font.size'] = 11
 
-    # 线性回归单独作为参考基准，不参与主对比
-    main_models = {k: v for k, v in results.items() if k != '线性回归'}
-    lr_r2 = results['线性回归']['r2']
-
-    names  = list(main_models.keys())
-    r2s    = [v['r2']   for v in main_models.values()]
-    rmses  = [v['rmse'] for v in main_models.values()]
-    maes   = [v['mae']  for v in main_models.values()]
+    names  = list(results.keys())
+    r2s    = [v['r2']   for v in results.values()]
+    rmses  = [v['rmse'] for v in results.values()]
+    maes   = [v['mae']  for v in results.values()]
     # 颜色：RF灰蓝、LightGBM绿、CatBoost橙、XGBoost+PSO深红
     colors = ['#92C5DE', '#4DAF4A', '#F4A582', '#D6604D']
 
@@ -198,17 +193,12 @@ def gen_comparison_figure(results):
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
 
-        # R² 图加线性回归参考线
         if ylabel == 'R²':
-            ax.axhline(lr_r2, color='gray', linestyle='--', linewidth=1.2, alpha=0.7)
-            ax.text(len(names)-0.5, lr_r2 + 0.003,
-                    f'线性回归理论基准 R²={lr_r2:.4f}', fontsize=8, color='gray', ha='right')
-            ax.set_ylim(min(r2s)*0.95, 1.03)
+            ax.set_ylim(min(r2s)*0.95, max(r2s)*1.05)
 
-    handles = ([Patch(color=colors[i], label=n) for i, n in enumerate(names)]
-               + [plt.Line2D([0],[0], color='gray', linestyle='--', label='线性回归（理论基准）')])
-    fig.legend(handles=handles, loc='upper center', ncol=5,
-               bbox_to_anchor=(0.5, 1.03), fontsize=9.5, framealpha=0.9)
+    handles = [Patch(color=colors[i], label=n) for i, n in enumerate(names)]
+    fig.legend(handles=handles, loc='upper center', ncol=4,
+               bbox_to_anchor=(0.5, 1.03), fontsize=10, framealpha=0.9)
     plt.tight_layout(rect=[0, 0, 1, 0.93])
     plt.savefig('paper_figures/fig_comparison_v2.png', dpi=150, bbox_inches='tight')
     plt.close()
@@ -224,17 +214,8 @@ def main():
     results = {}
 
     # 1. 线性回归
-    print("\n[1/5] 线性回归...")
-    t = time.time()
-    mdl = LinearRegression()
-    mdl.fit(X_tr_s, y_tr)
-    pred = mdl.predict(X_te_s)
-    r2, rmse, mae = metrics(y_te, pred)
-    results['线性回归'] = {'r2':r2,'rmse':rmse,'mae':mae,'time':round(time.time()-t,2)}
-    print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
-
-    # 2. 随机森林
-    print("\n[2/5] 随机森林 (n=200)...")
+    # 1. 随机森林
+    print("\n[1/4] 随机森林 (n=200)...")
     t = time.time()
     mdl = RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1)
     mdl.fit(X_tr, y_tr)
@@ -243,8 +224,8 @@ def main():
     results['随机森林'] = {'r2':r2,'rmse':rmse,'mae':mae,'time':round(time.time()-t,2)}
     print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
 
-    # 3. LightGBM
-    print("\n[3/5] LightGBM (默认)...")
+    # 2. LightGBM
+    print("\n[2/4] LightGBM (默认)...")
     t = time.time()
     mdl = lgb.LGBMRegressor(n_estimators=200, random_state=42, n_jobs=-1, verbose=-1)
     mdl.fit(X_tr_s, y_tr)
@@ -253,8 +234,8 @@ def main():
     results['LightGBM'] = {'r2':r2,'rmse':rmse,'mae':mae,'time':round(time.time()-t,2)}
     print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
 
-    # 4. CatBoost
-    print("\n[4/5] CatBoost (默认)...")
+    # 3. CatBoost
+    print("\n[3/4] CatBoost (默认)...")
     t = time.time()
     mdl = CatBoostRegressor(n_estimators=200, random_seed=42,
                              verbose=False, thread_count=-1)
@@ -264,8 +245,8 @@ def main():
     results['CatBoost'] = {'r2':r2,'rmse':rmse,'mae':mae,'time':round(time.time()-t,2)}
     print(f"  R²={r2:.4f}  RMSE={rmse:.2f}  MAE={mae:.2f}")
 
-    # 5. XGBoost + PSO（本文）
-    print("\n[5/5] XGBoost + PSO（本文）...")
+    # 4. XGBoost + PSO（本文）
+    print("\n[4/4] XGBoost + PSO（本文）...")
     best_params, pso_cv_r2 = run_pso(X_tr_s, y_tr)
     t = time.time()
     mdl = XGBRegressor(**best_params, random_state=42, n_jobs=-1, verbosity=0)

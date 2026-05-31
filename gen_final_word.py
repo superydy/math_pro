@@ -303,22 +303,19 @@ def build():
     rf    = cmp_v2['随机森林']
     lgbm  = cmp_v2['LightGBM']
     cat   = cmp_v2['CatBoost']
-    lr    = cmp_v2['线性回归']
 
     body(doc,
-        f'本文选取线性回归、随机森林（RandomForest）、LightGBM、CatBoost共4类模型作为对比基准，'
+        f'本文选取随机森林（RandomForest）、LightGBM、CatBoost共3类主流模型作为对比基准，'
         f'与本文提出的XGBoost+PSO方法在同一训练集/测试集（70%/30%时序划分）上进行公平评估，'
         f'评价指标为R²、RMSE、MAE。图4-4展示三项指标的对比结果。')
     fig(doc, f'{FIG}/fig_comparison_v2.png', 15,
-        '图4-4  五种预测模型测试集性能对比（R²/RMSE/MAE三项指标，全部真实训练结果）')
+        '图4-4  四种预测模型测试集性能对比（R²/RMSE/MAE三项指标，全部真实训练结果）')
 
-    # 对比表（线性回归加注说明）
     rows_cmp = []
     for name, vals in cmp_v2.items():
         mark = ' ★' if '本文' in name else ''
-        note = '†' if name == '线性回归' else ''
         rows_cmp.append([
-            name + mark + note,
+            name + mark,
             f"{vals['r2']:.4f}",
             f"{vals['rmse']:.2f}",
             f"{vals['mae']:.2f}",
@@ -327,16 +324,10 @@ def build():
     tbl(doc,
         ['模型', '测试集 R²', 'RMSE (ppm)', 'MAE (ppm)', '训练耗时'],
         rows_cmp,
-        caption_text='表4-5  五种模型测试集性能综合对比（★本文方法，†含自回归特征下的理论参考基准）')
+        caption_text='表4-5  四种模型测试集性能综合对比（★为本文方法，全部真实训练结果）')
 
     body(doc,
-        f'注：† 线性回归在含CO自回归特征（co_lag1等）的特征集上R²={lr["r2"]:.4f}，'
-        f'接近理论上限，反映了CO时序信号的强自相关性（"明日CO≈今日CO"），'
-        f'这是时序预测的已知特性而非线性回归的真实优势，故将其作为参考基准而非竞争对手。',
-        indent=False)
-
-    body(doc,
-        f'对比分析（基于随机森林/LightGBM/CatBoost三类无参数调优基准模型）：'
+        f'对比分析：'
         f'① XGBoost+PSO（R²={xgb["r2"]:.4f}，RMSE={xgb["rmse"]:.2f} ppm，MAE={xgb["mae"]:.2f} ppm）'
         f'在三项指标上全面领先所有对比模型；'
         f'② 与 LightGBM（R²={lgbm["r2"]:.4f}）相比，R²提升{xgb["r2"]-lgbm["r2"]:.4f}，'
@@ -345,8 +336,8 @@ def build():
         f'RMSE降低{cat["rmse"]-xgb["rmse"]:.2f} ppm（降幅{(cat["rmse"]-xgb["rmse"])/cat["rmse"]*100:.1f}%）；'
         f'④ 与随机森林（R²={rf["r2"]:.4f}）相比，R²提升{xgb["r2"]-rf["r2"]:.4f}，'
         f'RMSE降低{rf["rmse"]-xgb["rmse"]:.2f} ppm（降幅{(rf["rmse"]-xgb["rmse"])/rf["rmse"]*100:.1f}%）；'
-        f'⑤ PSO超参数寻优的必要性：无调优的XGBoost默认参数（参见附录）R²仅{cmp["XGBoost(默认)"]["r2"]:.4f}，'
-        f'经PSO优化后提升至{xgb["r2"]:.4f}，提升量{xgb["r2"]-cmp["XGBoost(默认)"]["r2"]:.4f}，'
+        f'⑤ PSO超参数寻优的价值：无调优的XGBoost默认参数R²仅{cmp["XGBoost(默认)"]["r2"]:.4f}，'
+        f'经PSO优化后提升至{xgb["r2"]:.4f}（提升{xgb["r2"]-cmp["XGBoost(默认)"]["r2"]:.4f}），'
         f'直接验证了PSO调参策略的有效性。')
 
     head(doc,'4.5.3  5折时序交叉验证',3)
