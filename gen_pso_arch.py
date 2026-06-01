@@ -178,9 +178,6 @@ def gen_q2():
     ax.axis('off')
     fig.patch.set_facecolor(WHITE)
 
-    ax.text(7.0, 7.72, 'Q2  XGBoost-PSO 超参数优化  系统架构图',
-            ha='center', va='center', fontsize=13.5, fontweight='bold', color='#1C2833')
-
     # ── 左：输入数据表格 ──
     ax.text(1.4, 7.2, '输入训练数据', ha='center', fontsize=10,
             fontweight='bold', color='#1C2833')
@@ -240,29 +237,20 @@ def gen_q2():
     ax.text(11.5, 2.3, '输出', ha='center', fontsize=9,
             color=GOLD, fontweight='bold')
 
-    # ── 连线（所有坐标均在形状边缘，不进入内部）──
-    # 表格右边缘(2.55) → 特征列表左边缘(3.7)
+    # ── 连线（箭头标签全部去除）──
     thick_arr(ax, 2.55, 6.4,  3.7,  6.4)
-    # 特征色块右边缘(2.9) → 特征列表左边缘(3.7)
     thick_arr(ax, 2.9,  3.85, 3.7,  4.2)
-    # 特征列表右边缘(5.5) → PSO云朵左侧(7.05)
-    thin_arr(ax, [(5.5, 6.6), (7.05, 6.2)], '特征矩阵 X_tr')
-    thin_arr(ax, [(5.5, 5.2), (7.05, 5.6)], '84维特征')
-    # 特征列表底边缘(2.2) → 3折CV顶边缘(1.99)
-    thin_arr(ax, [(4.6, 2.2), (4.6, 1.99)], 'CV数据')
-    # 3折CV右边缘(5.85) → 搜索空间左边缘(6.65)
-    thin_arr(ax, [(5.85, 1.6), (6.65, 2.0)], 'CV-R² 适应度')
-    # PSO云朵右侧(9.55) → XGBoost左边缘(9.8)
+    thin_arr(ax, [(5.5, 6.6), (7.05, 6.2)])
+    thin_arr(ax, [(5.5, 5.2), (7.05, 5.6)])
+    thin_arr(ax, [(4.6, 2.2), (4.6, 1.99)])
+    thin_arr(ax, [(5.85, 1.6), (6.65, 2.0)])
     thick_arr(ax, 9.55, 5.6,  9.8,  5.4)
-    # PSO注释右边缘(9.5) → 折点 → XGBoost底边缘入口
-    thin_arr(ax, [(9.5, 4.0), (10.15, 4.0), (10.15, 4.65)], 'gbest 最优参数', li=0)
-    # XGBoost底边缘(4.65) → 5折CV顶边缘(4.48)
+    thin_arr(ax, [(9.5, 4.0), (10.15, 4.0), (10.15, 4.65)])
     thin_arr(ax, [(11.5, 4.65), (11.5, 4.48)])
-    # 5折CV底边缘(3.72) → 输出框顶边缘(3.21)
     thick_arr(ax, 11.5, 3.72, 11.5, 3.21)
 
     plt.tight_layout(pad=0.3)
-    plt.savefig('paper_figures/Q2_PSO_arch.png', dpi=170,
+    plt.savefig('paper_figures/Q2_PSO_arch.png', dpi=250,
                 bbox_inches='tight', facecolor=WHITE)
     plt.close()
     print('✓ paper_figures/Q2_PSO_arch.png')
@@ -276,9 +264,6 @@ def gen_q3():
     ax.set_xlim(0, 14); ax.set_ylim(0, 8)
     ax.axis('off')
     fig.patch.set_facecolor(WHITE)
-
-    ax.text(7.0, 7.72, 'Q3  PSO 风箱负压优化  系统架构图',
-            ha='center', va='center', fontsize=13.5, fontweight='bold', color='#1C2833')
 
     # ── 左：当前工况表格 ──
     ax.text(1.4, 7.2, '当前工况快照', ha='center', fontsize=10,
@@ -346,27 +331,27 @@ def gen_q3():
     # 代理模型色块右边缘(2.9) → 特征列表左边缘(3.7)
     thick_arr(ax, 2.9,  3.85, 3.7,  4.2)
     # 特征列表右边缘(5.5) → PSO云朵左侧(7.05)
-    thin_arr(ax, [(5.5, 6.6), (7.05, 6.0)], '84维特征向量')
-    thin_arr(ax, [(5.5, 5.0), (7.05, 5.6)], '')
+    thin_arr(ax, [(5.5, 6.6), (7.05, 6.0)])
+    thin_arr(ax, [(5.5, 5.0), (7.05, 5.6)])
     # 特征列表底边缘(2.2) → 不动点注释顶边缘(2.05)
-    thin_arr(ax, [(4.6, 2.2), (4.6, 2.05)], 'CO初始化')
+    thin_arr(ax, [(4.6, 2.2), (4.6, 2.05)])
     # 不动点注释右边缘(5.95) → 惩罚注释左边缘(6.65)
-    thin_arr(ax, [(5.95, 1.6), (6.65, 1.95)], 'CO初始估计')
+    thin_arr(ax, [(5.95, 1.6), (6.65, 1.95)])
     # 惩罚注释顶边缘(2.45) → 折点 → PSO云朵左侧(7.05)
-    thin_arr(ax, [(7.9, 2.45), (7.9, 4.7), (7.05, 5.2)], '惩罚函数', li=1)
+    thin_arr(ax, [(7.9, 2.45), (7.9, 4.7), (7.05, 5.2)], li=1)
     # PSO云朵右侧(9.5) → 约束注释左边缘(10.0)
     thick_arr(ax, 9.5,  5.6,  10.0, 5.6)
     # PSO注释右边缘(9.7) → 折点 → 输出椭圆左边缘(9.8)
-    thin_arr(ax, [(9.7, 4.0), (10.2, 4.0), (10.2, 4.3)], 'gbest负压', li=0)
+    thin_arr(ax, [(9.7, 4.0), (10.2, 4.0), (10.2, 4.3)], li=0)
     # 代理模型色块底→折→惩罚注释（代理预测回路）
-    thin_arr(ax, [(1.5, 2.45), (1.5, 1.5), (6.65, 1.5)], 'CO预测代理', li=1)
+    thin_arr(ax, [(1.5, 2.45), (1.5, 1.5), (6.65, 1.5)], li=1)
     # 约束注释底边缘(5.22) → 输出椭圆顶边缘(5.0)
     thick_arr(ax, 11.4, 5.22, 11.4, 5.0)
     # 输出椭圆底边缘(3.65) → 结果框顶边缘(3.21)
     thick_arr(ax, 11.4, 3.65, 11.4, 3.21)
 
     plt.tight_layout(pad=0.3)
-    plt.savefig('paper_figures/Q3_PSO_arch.png', dpi=170,
+    plt.savefig('paper_figures/Q3_PSO_arch.png', dpi=250,
                 bbox_inches='tight', facecolor=WHITE)
     plt.close()
     print('✓ paper_figures/Q3_PSO_arch.png')
