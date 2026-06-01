@@ -234,8 +234,8 @@ def gen_q2():
     proc_box(ax, 11.5, 2.8, 3.2, 0.82,
              'CO 浓度预测模型\n测试集 R²=0.9493   MAE=43 ppm',
              fc=GOLD, fs=9.5)
-    ax.text(11.5, 2.3, '输出', ha='center', fontsize=9,
-            color=GOLD, fontweight='bold')
+    ax.text(11.5, 1.95, '输出', ha='center', fontsize=9,
+            color=GOLD, fontweight='bold', zorder=9)
 
     # ── 连线（箭头标签全部去除）──
     thick_arr(ax, 2.55, 6.4,  3.7,  6.4)
@@ -322,8 +322,8 @@ def gen_q3():
     proc_box(ax, 11.4, 2.8, 3.2, 0.82,
              '最优18维风箱负压\nCO降低 62.8%  (3495→1299 ppm)',
              fc=GOLD, fs=9.5)
-    ax.text(11.4, 2.3, '输出至 DCS 控制系统',
-            ha='center', fontsize=9, color=GOLD, fontweight='bold')
+    ax.text(11.4, 1.95, '输出至 DCS 控制系统',
+            ha='center', fontsize=9, color=GOLD, fontweight='bold', zorder=9)
 
     # ── 连线（所有坐标均在形状边缘，不进入内部）──
     # 表格右边缘(2.55) → 特征列表左边缘(3.7)
