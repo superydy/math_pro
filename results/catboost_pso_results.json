@@ -1,0 +1,94 @@
+{
+  "model": "CatBoost+PSO",
+  "best_params": {
+    "learning_rate": 0.2244,
+    "depth": 2,
+    "iterations": 500,
+    "l2_leaf_reg": 6.264,
+    "subsample": 0.6,
+    "colsample_bylevel": 0.783
+  },
+  "pso_config": {
+    "n_particles": 8,
+    "n_iter": 10,
+    "w": 0.8,
+    "c1": 2.0,
+    "c2": 2.0,
+    "cv_folds": 3
+  },
+  "pso_history": [
+    {
+      "iter": 1,
+      "gbest_cv": 0.8914,
+      "best_cv": 0.8914,
+      "mean_cv": 0.8638
+    },
+    {
+      "iter": 2,
+      "gbest_cv": 0.8992,
+      "best_cv": 0.8992,
+      "mean_cv": 0.865
+    },
+    {
+      "iter": 3,
+      "gbest_cv": 0.8992,
+      "best_cv": 0.8992,
+      "mean_cv": 0.8917
+    },
+    {
+      "iter": 4,
+      "gbest_cv": 0.9065,
+      "best_cv": 0.9065,
+      "mean_cv": 0.8976
+    },
+    {
+      "iter": 5,
+      "gbest_cv": 0.9065,
+      "best_cv": 0.9021,
+      "mean_cv": 0.8973
+    },
+    {
+      "iter": 6,
+      "gbest_cv": 0.9065,
+      "best_cv": 0.9011,
+      "mean_cv": 0.8963
+    },
+    {
+      "iter": 7,
+      "gbest_cv": 0.9065,
+      "best_cv": 0.9047,
+      "mean_cv": 0.899
+    },
+    {
+      "iter": 8,
+      "gbest_cv": 0.9065,
+      "best_cv": 0.9044,
+      "mean_cv": 0.8974
+    },
+    {
+      "iter": 9,
+      "gbest_cv": 0.9065,
+      "best_cv": 0.9047,
+      "mean_cv": 0.8974
+    },
+    {
+      "iter": 10,
+      "gbest_cv": 0.9065,
+      "best_cv": 0.9038,
+      "mean_cv": 0.8961
+    }
+  ],
+  "final_cv_r2": 0.9065,
+  "test_r2": 0.9466,
+  "test_rmse": 103.17,
+  "test_mae": 49.21,
+  "cv5_mean": 0.9052,
+  "cv5_std": 0.0848,
+  "cv5_folds": [
+    0.9271,
+    0.9127,
+    0.7423,
+    0.9713,
+    0.9727
+  ]
+}
